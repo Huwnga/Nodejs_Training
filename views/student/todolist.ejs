@@ -1,0 +1,58 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/css/css.css">
+<%- include('../includes/student_nav.ejs') %>
+  </header>
+
+  <body>
+    <main>
+      <!-- To do List -->
+      <div class="page todolist" aria-disabled="true" id="todolist_page">
+        <!-- title -->
+        <div>
+          <div class="head">
+            <h1>My Todo List</h1>
+            <p id="count_todolist"></p>
+          </div>
+
+          <div class="body">
+            <!-- search and box -->
+            <div class="search">
+              <input type="search" id="inp_search" name="inp_search" placeholder="Type to search" maxlength="100">
+              <div class="btn-group">
+                <button class="btn__group active" id="all">All</button>
+                <button class="btn__group" id="active">Active</button>
+                <button class="btn__group" id="done">Done</button>
+              </div>
+            </div>
+            <!-- list item -->
+            <div class="list" id="list_item">
+              <% for(let item of items){ %>
+                
+                <div class="list_item <% if(item.status == 0){ %> complete <% } %>" id="item">
+                  <p class="list_item-name"><%= item.name %></p>
+                  <div class="list_item-btn">
+                    <form action="/todolist/complete/<%= item.id %>" method="post">
+                      <button type="submit" id="btn-complete" class="btn btn-success<% if(item.status == 0){ %> disable <% } %>" <% if(item.status == 0){ %> disabled <% } %>>Complete</button>
+                    </form>
+                    
+                    <form action="/todolist/delete/<%= item.id %>" method="post">
+                      <button type="submit" id="btn-delete" class="btn btn-delete">Delete</button>
+                    </form>
+                  </div>
+                </div>
+              <% } %>
+            </div>
+            <!-- task -->
+            <div class="task">
+              <form action="/todolist" method="post">
+                <input type="text" class="todolist-input" name="task" id="task" placeholder="What needs to do be done" required />
+                <button id="add" class="btn btn-task">Add Task</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+
+  </html>

@@ -1,0 +1,105 @@
+<%- include('../includes/head.ejs') %>
+
+  <link rel="stylesheet" type="text/css" href="/css/css.css">
+  </head>
+
+  <body>
+    <main>
+      <!-- Sign up form -->
+      <div class="page auth_form" id="signup_form">
+        <div class="card">
+          <div class="card__head">
+            <p class="title">Sign Up Form</p>
+          </div>
+          <form class="card__body" action="/auth/signup" method="post">
+            <div class="form-controll">
+              <input class="card__body-input" type="text" name="signup_username" id="signup_username"
+                placeholder="Email or Phone *" />
+              <span class="error none" id="signup_username_error">
+                <i class="fa-duotone fa-exclamation"></i>
+                Please enter a valid mail
+              </span>
+            </div>
+
+            <div class="form-controll">
+              <input class="card__body-input" type="text" name="signup_fullname" id="signup_fullname"
+                placeholder="Full Name" />
+
+              <span class="error none" id="signup_fullname_error">
+                <i class="fa-duotone fa-exclamation"></i>
+                Please enter your full name
+              </span>
+            </div>
+
+            <div class="form-controll">
+              <div class="password__input-show_hide">
+                <input class="card__body-input" type="password" name="signup_password" id="signup_password"
+                  placeholder="Password *" />
+                <i class="password-show_hide-icon fa-solid fa-eye" id="signup_password_icon"></i>
+              </div>
+
+              <span class="error none" id="signup_password_error">
+                <i class="fa-duotone fa-exclamation"></i>
+                Please enter 8 characters with number and small letter
+              </span>
+            </div>
+            <div class="form-controll">
+              <div class="password__input-show_hide">
+                <input class="card__body-input" type="password" name="signup_repassword" id="signup_repassword"
+                  placeholder="Retire Password *" />
+                <i class="password-show_hide-icon fa-solid fa-eye" id="signup_repassword_icon"></i>
+              </div>
+
+              <span class="error none" id="signup_repassword_error">
+                <i class="fa-duotone fa-exclamation"></i>
+                Password don't match
+              </span>
+            </div>
+
+            <div class="form-controll">
+              <select class="card__body-select" style="color: #666;" name="roles" id="signup_roles">
+                <option style="color: #666;" value="1" selected disabled>Please select your role! *</option>
+                <% for (let role of roles) { 
+                  if(role.name !='Admin' ){ %>
+                  <option value="<%= role.id %>">
+                    <%= role.name %>
+                  </option>
+                  <% } %>
+                <% } %>
+              </select>
+              <span class="error none" id="signup_roles_error">
+                <i class="fa-duotone fa-exclamation"></i>
+                Please choose your roles!
+              </span>
+            </div>
+
+            <div class="form-controll">
+              <select class="card__body-select none" style="color: #666;" name="classrooms" id="signup_classrooms">
+                <option style="color: #666;" value="0" selected disabled>Please select your classroom! *</option>
+                <% for (let classroom of classrooms) { %>
+                  <option value="<%= classroom.id %>">
+                    <%= classroom.name %>
+                  </option>
+                  <% } %>
+              </select>
+              <span class="error none" id="signup_classrooms_error">
+                <i class="fa-duotone fa-exclamation"></i>
+                Please choose your classroom!
+              </span>
+            </div>
+
+            <button type="submit" class="card__body-btn disable" name="signup_submit" id="signup_submit" disabled>Sign
+              Up</button>
+          </form>
+
+          <div class="card__footer">
+            <p class="text">Already a member?</p>
+            <a class="card__footer-link" href="/auth/signin" id="sign_in_link">Sign In now</a>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+  <script src="/js/signup.js"></script>
+
+  </html>
