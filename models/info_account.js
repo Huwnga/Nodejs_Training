@@ -11,7 +11,11 @@ const Info_Account = sequelize.define('info_account', {
     allowNull: false,
     primaryKey: true
   },
-  
+
+  avatar: {
+    type: Sequelize.STRING
+  },
+
   full_name: {
     type: Sequelize.STRING,
     allowNull: false

@@ -2,9 +2,10 @@ const express = require('express');
 const routes = express.Router();
 
 const teacherController = require('../controllers/teacher');
+const isTeacher = require('../middleware/isTeacher');
 
 // teacher
-routes.get('/teacher', teacherController.getAllClassroom);
+routes.get('/', isTeacher, teacherController.getAllClassroom);
 
 // routes.get('/teacher/classroom/:classroomId', teacherController.getClassroom);
 
@@ -15,3 +16,5 @@ routes.get('/teacher', teacherController.getAllClassroom);
 // routes.post('/teacher/classroom/:classroomId/delete_student/:studentId', adminController.postDeleteStudentWithClassroomId);
 
 // routes.get('/teacher/student/:studentId', teacherController.getStudent);
+
+module.exports = routes;

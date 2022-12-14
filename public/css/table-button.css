@@ -2,6 +2,10 @@
   margin-top: 5rem;
 }
 
+.table {
+  margin-top: 2rem;
+}
+
 .table-button__add {
   background-color: #212529;
   color: #fff;
@@ -31,10 +35,61 @@
   top: -1px;
 }
 
+.table-button__update {
+  background-color: #1f7eb9;
+  color: #fff;
+  justify-content: space-between;
+  width: 7rem;
+  border-color: #7f868d;
+  border-radius: 30px;
+  margin-bottom: 0.25rem 0.5rem;
+  padding: 5px 10px;
+  box-sizing: border-box;
+  transition: 0.5s;
+}
+
+.table-button__update:hover {
+  position: relative;
+  background-color: #3a8abb;
+  border-color: #c9d2da;
+  outline: unset;
+  top: -2px;
+}
+
+.table-button__update:active {
+  position: relative;
+  background-color: #165b85;
+  border-color: #5c6267;
+  outline: unset;
+  top: -1px;
+}
+
+
+.table-button__detail {
+  background-color: #27c47b;
+  color: #fff;
+  justify-content: space-between;
+  width: 7rem;
+  border-color: #7f868d;
+  border-radius: 30px;
+  margin-bottom: 0.25rem 0.5rem;
+  padding: 5px 10px;
+  box-sizing: border-box;
+}
+
+.table-button__detail:hover {
+  position: relative;
+  background-color: #4bc089;
+  border-color: #c9d2da;
+  outline: unset;
+  top: -2px;
+}
+
 .table-button__delete {
   background-color: #dc3545;
   color: #fff;
   justify-content: space-between;
+  width: 7rem;
   border-color: #7f868d;
   border-radius: 30px;
   margin-bottom: 0.25rem 0.5rem;
@@ -56,4 +111,11 @@
   border-color: #5c6267;
   outline: unset;
   top: -1px;
+}
+
+.table-button__delete.disabled,
+.table-button__add:disabled,
+.table-button__update:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }

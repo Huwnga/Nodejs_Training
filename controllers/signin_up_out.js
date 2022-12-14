@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const Account = require('../models/account');
 const Account_Class = require('../models/account_class');
 const Class = require('../models/class');
@@ -6,9 +7,15 @@ const Role = require('../models/role');
 
 // Get Method
 exports.getSignin = (req, res, next) => {
-  res.render('auth/sign-in', {
-    pageTitle: 'Sign In',
-    path: '/auth/signin'
+  return res.json({
+    error: {
+      status: 200,
+      message: "OK"
+    },
+    data: {
+      pageTitle: 'Sign In',
+      path: '/auth/signin'
+    }
   });
 };
 
@@ -17,15 +24,30 @@ exports.getSignup = (req, res, next) => {
     .then(roles => {
       Class.findAll()
         .then(classrooms => {
-          res.render('auth/sign-up', {
-            roles: roles,
-            classrooms: classrooms,
-            pageTitle: 'Sign Up',
-            path: '/auth/signup'
+          return res.json({
+            error: {
+              status: 200,
+              message: "OK"
+            },
+            data: {
+              roles: roles,
+              classrooms: classrooms,
+              pageTitle: 'Sign Up',
+              path: '/auth/signup'
+            }
           });
         });
     })
-    .catch(err => console.log(err));
+    .catch(err => res.status(400).json({
+      error: {
+        status: 400,
+        message: err
+      },
+      data: {
+        pageTitle: 'Page Not Found',
+        path: '/404'
+      }
+    }));
 };
 
 // exports.getLogout = (req, res, next) => {
@@ -38,54 +60,75 @@ exports.getSignup = (req, res, next) => {
 
 // Post Method
 exports.postSignin = (req, res, next) => {
-  const username = req.body.login_username;
-  const password = req.body.login_password;
+  const username = req.body.username;
+  const password = req.body.password;
   Account.findOne({
     where: {
       username: username
+    },
+    include: {
+      all: true,
+      nested: true
     }
   })
     .then(account => {
       if (account) {
         if (account.password == password) {
-          res.clearCookie("isAdmin");
-          res.clearCookie("isTeacher");
-          res.clearCookie("isStudent");
+          const token = jwt.sign(
+            { userId: account.id },
+            'RANDOM_TOKEN_SECRET',
+            { expiresIn: '24h' }
+          );
+          account.update({
+            token: token
+          });
+          account.save();
 
-          if (account.roleId == 1) {
-            res.cookie('isAdmin', {
-              id: account.id,
-              roleId: account.roleId
-            });
-
-            return res.redirect('/admin/account');
-
-          } else if (account.roleId == 2) {
-            res.cookie('isTeacher', {
-              id: account.id,
-              roleId: account.roleId
-            });
-
-            return res.redirect('/teacher');
-
-          } else {
-            res.cookie('isStudent', {
-              id: account.id,
-              roleId: account.roleId
-            });
-
-            return res.redirect('/');
-          }
+          return res.status(200).json({
+            error: {
+              status: 200,
+              message: "Login Successfully!"
+            },
+            data: {
+              account: account,
+              role: account.roles
+            }
+          });
         } else {
-          console.log('Account or password is wrong!');
-          return res.redirect('/auth/signin');
+          return res.json({
+            error: {
+              status: 401,
+              message: "Wrong Username or Password!"
+            },
+            data: {
+              pageTitle: 'Sign In',
+              path: '/auth/signin'
+            }
+          });
         }
       } else {
-        console.log('Account or password is wrong!');
-        return res.redirect('/auth/signin');
+        return res.json({
+          error: {
+            status: 401,
+            message: "Wrong Username or Password!"
+          },
+          data: {
+            pageTitle: 'Sign In',
+            path: '/auth/signin'
+          }
+        });
       }
     })
-    .catch();
+    .catch(err => res.status(400).json({
+      error: {
+        status: 400,
+        message: err
+      },
+      data: {
+        pageTitle: 'Page Not Found',
+        path: '/404'
+      }
+    }));
 };
 
 exports.postSignup = (req, res, next) => {
@@ -129,20 +172,60 @@ exports.postSignup = (req, res, next) => {
                     classId: classroomId
                   });
 
-                  console.log("Welcome Student" + full_name);
-                  return res.redirect('/auth/signin');
+                  return res.status(201).json({
+                    error: {
+                      status: 201,
+                      message: 'Create Account Successfully!'
+                    },
+                    data: {
+                      nextPath: '/admin/account'
+                    }
+                  });
                 })
-                .catch(err => console.log(err));
+                .catch(err => res.status(400).json({
+                  error: {
+                    status: 400,
+                    message: err
+                  },
+                  data: {
+                    pageTitle: 'Page Not Found',
+                    path: '/404'
+                  }
+                }));
             }
-            return res.redirect('/auth/signin');
+            return res.status(201).json({
+              error: {
+                status: 201,
+                message: 'Create Account Successfully!'
+              },
+              data: {
+                nextPath: '/admin/account'
+              }
+            });
           });
       } else {
-        console.log('This username already exists!');
+        return res.status(401).json({
+          error: {
+            status: 401,
+            message: 'This username already exists!'
+          },
+          data: {
+            pageTitle: 'Sign Up',
+            path: '/auth/signup'
+          }
+        });
       }
     })
-    .catch(err => {
-      console.log(err);
-    });
+    .catch(err => res.status(400).json({
+      error: {
+        status: 400,
+        message: err
+      },
+      data: {
+        pageTitle: 'Page Not Found',
+        path: '/404'
+      }
+    }));
 };
 
 exports.postLogout = (req, res, next) => {

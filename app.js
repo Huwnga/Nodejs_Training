@@ -2,7 +2,6 @@
 const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
 
 // Call database and models
 const sequelize = require('./util/connect_mysql');
@@ -18,6 +17,12 @@ const errorController = require('./controllers/error');
 
 const app = express();
 
+// app.use((req, res, next) => {
+//   res.setHeader('Access-Controll-Allow-Origin', '*');
+//   res.setHeader('Access-Controll-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
+//   res.setHeader('Access-Controll-Allow-Headers', 'Content-Type, Authorization');
+// });
+
 // Call routes
 const signin_up_outRoutes = require('./routes/signin_up_out');
 const adminRoutes = require('./routes/admin');
@@ -25,18 +30,21 @@ const teacherRoutes = require('./routes/teacher');
 const studentRoutes = require('./routes/student');
 
 // set views
-app.set('view engine', 'ejs');
-app.set('views', 'views');
+// app.set('view engine', 'ejs');
+// app.set('views', 'views');
 
 
 //  Set library
-app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(cookieParser());
+// app.use(cookieParser());
 
 // Use routes
 app.use('/auth', signin_up_outRoutes);
 app.use('/admin', adminRoutes);
+app.use('/teacher', teacherRoutes);
+app.use(studentRoutes);
 app.use(errorController.get404);
 
 // Relationship mysql
@@ -63,7 +71,7 @@ sequelize
           Role.create({
             name: 'Teacher'
           });
-          
+
           Role.create({
             name: 'Student'
           });

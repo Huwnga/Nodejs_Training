@@ -11,7 +11,7 @@ const Account = sequelize.define('account', {
     allowNull: false,
     primaryKey: true
   },
-  
+
   username: {
     type: Sequelize.STRING,
     allowNull: false
@@ -25,6 +25,10 @@ const Account = sequelize.define('account', {
   status: {
     type: Sequelize.INTEGER,
     allowNull: false
+  },
+
+  token: {
+    type: Sequelize.STRING
   }
 });
 
