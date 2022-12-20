@@ -14,6 +14,10 @@ exports.getAllAccount = (req, res, next) => {
   Account.findOne({
     where: {
       id: userId
+    },
+    include: {
+      all: true,
+      nested: true
     }
   })
     .then(user => {
@@ -28,18 +32,31 @@ exports.getAllAccount = (req, res, next) => {
           }
         })
           .then(account => {
-            return res.status(200).json({
-              error: {
-                status: 200,
-                message: 'OK'
-              },
-              data: {
-                account: account,
-                userId: userId,
-                pageTitle: 'Profile',
-                path: '/account/accountId'
-              }
-            });
+            if (account) {
+              return res.status(200).json({
+                error: {
+                  status: 200,
+                  message: 'OK'
+                },
+                data: {
+                  account: account,
+                  userId: userId,
+                  pageTitle: 'Profile',
+                  path: '/account/accountId'
+                }
+              });
+            } else {
+              return res.status(401).json({
+                error: {
+                  status: 401,
+                  message: 'This Account Doesn\'t exists'
+                },
+                data: {
+                  pageTitle: 'All Account',
+                  path: '/admin/account'
+                }
+              });
+            }
           })
           .catch(err => {
             return res.status(400).json({
@@ -177,7 +194,6 @@ exports.postAddAccount = (req, res, next) => {
   const full_name = req.body.fullname;
   const gender = req.body.gender;
   const roleId = req.body.roles;
-  const classroomId = req.body.classrooms;
 
   Account.findOne({
     where: {
@@ -197,9 +213,10 @@ exports.postAddAccount = (req, res, next) => {
           .then(account => {
             if (account) {
               Info_Account.create({
-                full_name: full_name,
+                full_name: fullname,
+                avatar: account.role.name + account.id + ".png",
                 gender: gender,
-                accountId: account.id,
+                accountId: accountId
               })
                 .catch(err => {
                   return res.status(400).json({
@@ -211,43 +228,6 @@ exports.postAddAccount = (req, res, next) => {
                       body: req.body,
                       pageTitle: 'All Account',
                       path: '/admin/account/add'
-                    }
-                  });
-                });
-
-              Account_Class.findOne({
-                classId: classroomId
-              })
-                .then(classes => {
-                  if (classes) {
-                    Account_Class.create({
-                      quantity: 0,
-                      accountId: account.id,
-                      classId: classroomId
-                    });
-                  } else {
-                    return res.status(400).json({
-                      error: {
-                        status: 400,
-                        message: 'Classes doesn\'t exists!'
-                      },
-                      data: {
-                        body: req.body,
-                        pageTitle: 'All Account',
-                        path: '/admin/account/add'
-                      }
-                    });
-                  }
-                })
-                .catch(err => {
-                  return res.status(400).json({
-                    error: {
-                      status: 400,
-                      message: err.toString()
-                    },
-                    data: {
-                      pageTitle: 'All Account',
-                      path: '/admin/account'
                     }
                   });
                 });
@@ -340,6 +320,147 @@ exports.postAddAccount = (req, res, next) => {
     });
 }
 
+exports.postUpdateAccount = (req, res, next) => {
+  const id = req.body.id;
+  const username = req.body.username;
+  const password = req.body.password;
+  const full_name = req.body.fullname;
+  const gender = req.body.gender;
+  const roleId = req.body.roles;
+
+  Account.findOne({
+    where: {
+      id: id
+    }
+  })
+    .then(acc => {
+      if (acc) {
+        Account.findOne({
+          where: {
+            username: username,
+          }
+        })
+          .then(account => {
+            if (!account) {
+              account.update(
+                {
+                  username: username,
+                  password: password,
+                  status: 1,
+                  roleId: roleId,
+                }
+              );
+              account.save();
+
+              Info_Account.findOne({
+                where: {
+                  accountId: id
+                }
+              })
+                .then(info => {
+                  if (info) {
+                    info.update({
+                      full_name: full_name,
+                      gender: gender,
+                    });
+                    info.save();
+                  } else {
+                    Info_Account.create({
+                      full_name: fullname,
+                      avatar: account.role.name + account.id + ".png",
+                      gender: gender,
+                      accountId: id
+                    })
+                      .catch(err => {
+                        return res.status(400).json({
+                          error: {
+                            status: 400,
+                            message: err.toString()
+                          },
+                          data: {
+                            pageTitle: 'All Account',
+                            path: '/admin/account'
+                          }
+                        });
+                      });;
+                  }
+                })
+                .catch(err => {
+                  return res.status(400).json({
+                    error: {
+                      status: 400,
+                      message: err.toString()
+                    },
+                    data: {
+                      pageTitle: 'All Account',
+                      path: '/admin/account'
+                    }
+                  });
+                });
+
+              return res.status(201).json({
+                error: {
+                  status: 201,
+                  message: 'Update Account Successfully!'
+                },
+                data: {
+                  accountId: id
+                }
+              });
+            } else {
+              return res.status(401).json({
+                error: {
+                  status: 401,
+                  message: 'This username is exists!'
+                },
+                data: {
+                  pageTitle: 'All Account',
+                  path: '/admin/account'
+                }
+              });
+            }
+          })
+          .catch(err => {
+            return res.status(400).json({
+              error: {
+                status: 400,
+                message: err.toString()
+              },
+              data: {
+                pageTitle: 'All Account',
+                path: '/admin/account'
+              }
+            });
+          });
+      } else {
+        return res.status(401).json({
+          error: {
+            status: 401,
+            message: 'This Account Doesn\'t exists!'
+          },
+          data: {
+            accountId: id,
+            pageTitle: 'All Account',
+            path: '/admin/account'
+          }
+        });
+      }
+    })
+    .catch(err => {
+      return res.status(400).json({
+        error: {
+          status: 400,
+          message: err.toString()
+        },
+        data: {
+          pageTitle: 'All Account',
+          path: '/admin/account'
+        }
+      });
+    });
+
+}
+
 exports.getUpdateInfoAccount = (req, res, next) => {
   const accountId = req.query.accountId;
 
@@ -394,7 +515,6 @@ exports.getUpdateInfoAccount = (req, res, next) => {
 };
 
 exports.postUpdateInfoAccount = (req, res, next) => {
-  const accountId = req.query.accountId;
   const id = req.body.id;
   const fullname = req.body.full_name;
   const avatar = req.body.avatar;
@@ -402,16 +522,6 @@ exports.postUpdateInfoAccount = (req, res, next) => {
   const dob = req.body.dob;
   const mobile = req.body.mobile;
   const address = req.body.address;
-
-  if (accountId != id) {
-    return res.status(401).json({
-      error: {
-        status: 401,
-        message: 'id Params and id feild not equals'
-      },
-      data: {}
-    });
-  }
 
   Account.findOne({
     where: {
@@ -475,6 +585,17 @@ exports.postUpdateInfoAccount = (req, res, next) => {
               }
             });
           });
+      } else {
+        return res.status(401).json({
+          error: {
+            status: 401,
+            message: 'This Account Doesn\'t exists'
+          },
+          data: {
+            pageTitle: 'All Account',
+            path: '/admin/account'
+          }
+        });
       }
     })
     .catch(err => {
@@ -513,7 +634,19 @@ exports.getActiveAccount = (req, res, next) => {
             message: 'Active Account Successfully!'
           },
           data: {
-            nextPath: '/admin/account'
+            pageTitle: 'All Account',
+            path: '/admin/account'
+          }
+        });
+      } else {
+        return res.status(401).json({
+          error: {
+            status: 401,
+            message: 'This Account Doesn\'t exists'
+          },
+          data: {
+            pageTitle: 'All Account',
+            path: '/admin/account'
           }
         });
       }
@@ -525,8 +658,8 @@ exports.getActiveAccount = (req, res, next) => {
           message: err.toString()
         },
         data: {
-          pageTitle: 'Page Not Found',
-          path: '/404'
+          pageTitle: 'All Account',
+          path: '/admin/account'
         }
       });
     });
@@ -553,7 +686,8 @@ exports.getInActiveAccount = (req, res, next) => {
             message: 'Inactive Account Successfully!'
           },
           data: {
-            nextPath: '/admin/account'
+            pageTitle: 'All Account',
+            path: '/admin/account'
           }
         });
       } else {
@@ -563,7 +697,8 @@ exports.getInActiveAccount = (req, res, next) => {
             message: 'This Account Doesn\'t exists'
           },
           data: {
-            nextPath: '/admin/account'
+            pageTitle: 'All Account',
+            path: '/admin/account'
           }
         });
       }
@@ -575,246 +710,420 @@ exports.getInActiveAccount = (req, res, next) => {
           message: err.toString()
         },
         data: {
-          pageTitle: 'Page Not Found',
-          path: '/404'
+          pageTitle: 'All Account',
+          path: '/admin/account'
         }
       });
     });
 }
+// classroom
+exports.getAllClassroom = (req, res, next) => {
+  const classroomId = req.query.classroomid;
 
+  if (classroomId) {
+    Class.findOne({
+      where: {
+        id: classroomId
+      }
+    })
+      .then(classroom => {
+        if (classroom) {
+          return res.status(200).json({
+            error: {
+              status: 200,
+              message: 'OK'
+            },
+            data: {
+              classroom: classroom,
+              pageTitle: 'Classrooms',
+              path: '/admin/classroom'
+            }
+          });
+        } else {
+          return res.status(401).json({
+            error: {
+              status: 401,
+              message: 'This Classroom Doesn\'t exists!'
+            },
+            data: {
+              classroomId: classroomId,
+              pageTitle: 'Classrooms',
+              path: '/admin/classroom'
+            }
+          });
+        }
+      })
+      .catch(err => {
+        return res.status(400).json({
+          error: {
+            status: 400,
+            message: err.toString()
+          },
+          data: {
+            classroomId: classroomId,
+            pageTitle: 'Classrooms',
+            path: '/admin/classroom'
+          }
+        });
+      });
+  } else {
+    Class.findAll({
+      include: {
+        all: true,
+        nested: true
+      }
+    })
+      .then(classrooms => {
+        return res.status(200).json({
+          error: {
+            status: 200,
+            message: 'OK'
+          },
+          data: {
+            classrooms: classrooms,
+            pageTitle: 'Classrooms',
+            path: '/admin/classroom'
+          }
+        });
+      })
+      .catch(err => {
+        return res.status(400).json({
+          error: {
+            status: 400,
+            message: err.toString()
+          },
+          data: {
+            pageTitle: 'Classrooms',
+            path: '/admin/classroom'
+          }
+        });
+      });
+  }
+};
 
-// // classroom get
-// exports.getAllClassroom = (req, res, next) => {
-//   Class.findAll({
-//     include: {
-//       all: true,
-//       nested: true
-//     }
-//   })
-//     .then(classrooms => {
-//       console.log(classrooms);
-//       res.render('admin/classmate/index', {
-//         classrooms: classrooms,
-//         isAdmin: req.cookies.isAdmin,
-//         isTeacher: req.cookies.isTeacher,
-//         isStudent: req.cookies.isStudent,
-//         pageTitle: 'Classrooms',
-//         path: '/admin/classroom'
-//       });
-//     })
-//     .catch(err => {
-//       console.log(err);
-//     });
-// };
+exports.getUpdateClassroom = (req, res, next) => {
+  const classroomId = req.query.classroomId;
 
-// exports.getClassroom = (req, res, next) => {
-//   const classroomId = req.params.classroomId;
+  Class.findOne({
+    where: {
+      id: classroomId
+    }
+  })
+    .then(classroom => {
+      if (classroom) {
+        return res.status(200).json({
+          error: {
+            status: 200,
+            message: 'OK'
+          },
+          data: {
+            classroom: classroom,
+            pageTitle: 'Classrooms',
+            path: '/admin/classroom/udpate'
+          }
+        });
+      } else {
+        return res.status(401).json({
+          error: {
+            status: 401,
+            message: 'This Classroom Doesn\'t exists!'
+          },
+          data: {
+            classroomId: classroomId,
+            pageTitle: 'Classrooms',
+            path: '/admin/classroom'
+          }
+        });
+      }
+    })
+    .catch(err => {
+      return res.status(401).json({
+        error: {
+          status: 401,
+          message: err.toString()
+        },
+        data: {
+          pageTitle: 'Classrooms',
+          path: '/admin/classroom'
+        }
+      });
+    });
+};
 
-//   Class.findOne({
-//     where: {
-//       id: classroomId
-//     },
+exports.postUpdateClassroom = (req, res, next) => {
+  const classroomId = req.query.classroomId;
+  const id = req.body.id;
+  const name = req.body.name;
 
-//     include: {
-//       all: true,
-//       nested: true
-//     }
-//   })
-//     .then(classroom => {
-//       console.log(classroom);
-//       res.render('admin/account/index', {
-//         accounts: classroom.accounts,
-//         isAdmin: req.cookies.isAdmin,
-//         isTeacher: req.cookies.isTeacher,
-//         isStudent: req.cookies.isStudent,
-//         pageTitle: 'Classroom',
-//         path: 'admin/classroom'
-//       });
-//     })
-//     .catch(err => console.log(err));
-// };
+  if (classroomId != id) {
+    return res.status(401).json({
+      error: {
+        status: 401,
+        message: 'Params id with feild id not equals!'
+      },
+      data: {
+        pageTitle: 'Classrooms',
+        path: '/admin/classroom'
+      }
+    });
+  }
 
-// exports.getAddClassroom = (req, res, next) => {
+  Class.findOne({
+    where: {
+      id: id
+    }
+  })
+    .then(classroom => {
+      if (classroom) {
+        classroom.update({
+          name: name
+        });
+        classroom.save();
+      } else {
+        return res.status(401).json({
+          error: {
+            status: 401,
+            message: 'This Classroom Doesn\'t exists!'
+          },
+          data: {
+            classroomId: classroomId,
+            pageTitle: 'Classrooms',
+            path: '/admin/classroom'
+          }
+        });
+      }
+    })
+    .then(results => {
+      return res.status(201).json({
+        error: {
+          status: 201,
+          message: 'Update Classroom Successfully'
+        },
+        data: {
+          classroom: classroom,
+          pageTitle: 'Classrooms',
+          path: '/admin/classroom'
+        }
+      });
+    })
+    .catch(err => {
+      return res.status(401).json({
+        error: {
+          status: 401,
+          message: err.toString()
+        },
+        data: {
+          pageTitle: 'Classrooms',
+          path: '/admin/classroom'
+        }
+      });
+    });
+};
 
-//   res.render('admin/classmate/create', {
-//     pageTitle: 'Classrooms',
-//     path: '/admin/classroom/add'
-//   });
-// };
+exports.postDeleteClassroom = (req, res, next) => {
+  const classroomId = req.params.classroomId;
 
-// exports.getUpdateClassroom = (req, res, next) => {
-//   const classroomId = req.params.classroomId;
+  Class.findOne({
+    where: {
+      id: classroomId
+    }
+  })
+    .then(classroom => {
+      if (classroom) {
+        Account_Class.destroy({
+          where: {
+            classId: classroomId
+          }
+        });
+        classroom.destroy({
+          where: {
+            id: classroomId
+          }
+        });
+      }
+    })
+    .then(results => {
+      return res.status(200).json({
+        error: {
+          status: 201,
+          message: 'Delete Successfully!'
+        },
+        data: {
+          pageTitle: 'Classrooms',
+          path: '/admin/classroom'
+        }
+      });
+    })
+    .catch(err => {
+      return res.status(401).json({
+        error: {
+          status: 401,
+          message: err.toString()
+        },
+        data: {
+          pageTitle: 'Classrooms',
+          path: '/admin/classroom'
+        }
+      });
+    });
+};
 
-//   Class.findOne({
-//     where: {
-//       id: classroomId
-//     }
-//   })
-//     .then(classroom => {
-//       if (classroom) {
-//         res.render('admin/classmate/update', {
-//           classroom: classroom,
-//           pageTitle: 'Classrooms',
-//           path: '/admin/classroom/add'
-//         });
-//       } else {
-//         console.log('Classroom: Get Update Method Fail! Classroom doesn\'t exists');
-//         res.redirect('/admin/classroom/add');
-//       }
-//     })
-//     .catch(err => {
-//       console.log(err);
-//     });
-// };
+exports.postAddStudentWithClassroom = (req, res, next) => {
+  const classroomId = req.body.classrooms;
+  const studentId = req.body.students;
 
-// exports.getAddStudentWithClassroom = (req, res, next) => {
-//   Class.findAll()
-//     .then(classrooms => {
-//       Account.findAll()
-//         .then(accounts => {
-//           res.render('admin/classmate/add-student', {
-//             classrooms: classrooms,
-//             accounts: accounts,
-//             pageTitle: 'Add Student With Classroom',
-//             path: '/admin/classroom/add_student'
-//           });
-//         })
-//         .catch(err => {
-//           console.log(err);
-//         });
-//     })
-//     .catch(err => {
-//       console.log(err);
-//     });
-// };
-// // classroom post
-// exports.postAddClassroom = (req, res, next) => {
-//   const name = req.body.name;
+  Class.findOne({
+    where: {
+      id: classroomId
+    }
+  })
+    .then(classroom => {
+      if (classroom) {
+        Account.findOne({
+          where: {
+            id: studentId
+          }
+        })
+          .then(account => {
+            if (account) {
+              Account_Class.create({
+                classroomId: classroomId,
+                accountId: studentId
+              })
+                .then(account_class => {
+                  return res.status(200).json({
+                    error: {
+                      status: 200,
+                      message: 'Add Student Successfully!'
+                    },
+                    data: {
+                      classroomId: classroomId,
+                      pageTitle: 'Classrooms',
+                      path: '/admin/classroom'
+                    }
+                  });
+                })
+                .catch(err => {
+                  return res.status(401).json({
+                    error: {
+                      status: 401,
+                      message: err.toString()
+                    },
+                    data: {
+                      classroomId: classroomId,
+                      pageTitle: 'Classrooms',
+                      path: '/admin/classroom'
+                    }
+                  });
+                });
+            } else {
+              return res.status(401).json({
+                error: {
+                  status: 401,
+                  message: 'This Account Doesn\'t exists!'
+                },
+                data: {
+                  accountId: studentId,
+                  pageTitle: 'Classrooms',
+                  path: '/admin/classroom'
+                }
+              });
+            }
+          })
+          .catch(err => {
+            return res.status(401).json({
+              error: {
+                status: 401,
+                message: err.toString()
+              },
+              data: {
+                pageTitle: 'Classrooms',
+                path: '/admin/classroom'
+              }
+            });
+          });
+      } else {
+        return res.status(401).json({
+          error: {
+            status: 401,
+            message: 'This Classroom Doesn\'t exists!'
+          },
+          data: {
+            classroomId: classroomId,
+            pageTitle: 'Classrooms',
+            path: '/admin/classroom'
+          }
+        });
+      }
+    })
+    .catch(err => {
+      return res.status(401).json({
+        error: {
+          status: 401,
+          message: err.toString()
+        },
+        data: {
+          pageTitle: 'Classrooms',
+          path: '/admin/classroom'
+        }
+      });
+    });
+};
 
-//   Class.create({
-//     name: name
-//   })
-//     .then(classroom => {
-//       console.log("Add Successfully with id: " + classroom.id);
-//       res.redirect('/admin/classroom');
-//     })
-//     .catch(err => {
-//       console.log(err);
-//     })
-// };
+exports.postDeleteStudentWithClassroomId = (req, res, next) => {
+  const classroomId = req.query.classroomId;
+  const studentId = req.query.studentId;
 
-// exports.postUpdateClassroom = (req, res, next) => {
-//   const classroomId = req.params.classroomId;
-//   const id = req.body.id;
-//   const name = req.body.name;
-
-//   if (classroomId != id) {
-//     return redirect('/admin/classroom');
-//   }
-
-//   Class.findOne({
-//     where: {
-//       id: id
-//     }
-//   })
-//     .then(classroom => {
-//       classroom.update({
-//         name: name
-//       });
-//       classroom.save();
-//     })
-//     .then(results => {
-//       console.log("Classroom: Update successfully");
-//       return res.redirect('/classroom');
-//     })
-//     .catch(err => {
-//       console.log(err);
-//     });
-// };
-
-// exports.postDeleteClassroom = (req, res, next) => {
-//   const classroomId = req.params.classroomId;
-//   console.log("delete");
-//   Class.findOne({
-//     where: {
-//       id: classroomId
-//     }
-//   })
-//     .then(classroom => {
-//       if (classroom) {
-//         Account_Class.destroy({
-//           where: {
-//             classId: classroomId
-//           }
-//         });
-//         return classroom.destroy({
-//           where: {
-//             id: classroomId
-//           }
-//         });
-//       }
-//     })
-//     .then(results => {
-//       console.log("Classroom: Delete successfully");
-//       return res.redirect('/admin/classroom');
-//     })
-//     .catch(err => console.log(err));
-// };
-
-// exports.postAddStudentWithClassroom = (req, res, next) => {
-//   const classroomId = req.body.classrooms;
-//   const studentId = req.body.students;
-
-//   Class.findOne({
-//     where: {
-//       id: classroomId
-//     }
-//   })
-//     .then(classroom => {
-//       Account.findOne({
-//         where: {
-//           id: studentId
-//         }
-//       })
-//         .then(account => {
-//           if (classroom && account) {
-//             Account_Class.create({
-//               classroomId: classroomId,
-//               accountId: studentId
-//             })
-//               .then(account_class => {
-//                 res.redirect('/classroom');
-//               })
-//               .catch(err => {
-//                 console.log(err);
-//               });
-//           }
-//         });
-//     })
-//     .catch(err => {
-//       console.log(err);
-//     });
-// };
-
-// exports.postDeleteStudentWithClassroomId = (req, res, next) => {
-//   const classroomId = req.params.classroomId;
-//   const studentId = req.params.classroomId;
-
-//   Account_Class.findOne({
-//     where: {
-//       classroomId: classroomId,
-//       studentId: studentId
-//     }
-//   })
-//     .then(account_class => {
-//       if (account_class) {
-//         return account_class.destroy();
-//       } else {
-//         console.log("Classroom: Delete Relation ship faild! Id doesn't exists!")
-//       }
-//     })
-//     .then(results => {
-//       console.log("Classroom: Delete Relationship with at Account_Classroom successfully!");
-//       return res.redirect('/classroom');
-//     })
-// };
+  Account_Class.findOne({
+    where: {
+      classroomId: classroomId,
+      studentId: studentId
+    }
+  })
+    .then(account_class => {
+      if (account_class) {
+        account_class.destroy();
+      } else {
+        return res.status(401).json({
+          error: {
+            status: 401,
+            message: "Delete faild! Classroom id or student id doesn't exists!"
+          },
+          data: {
+            classroomId: classroomId,
+            studentId: studentId,
+            pageTitle: 'Classrooms',
+            path: '/admin/classroom'
+          }
+        });
+      }
+    })
+    .then(results => {
+      return res.status(200).json({
+        error: {
+          status: 200,
+          message: 'Remove Student in Classroom Successfully!'
+        },
+        data: {
+          classroomId: classroomId,
+          studentId: studentId,
+          pageTitle: 'Classrooms',
+          path: '/admin/classroom'
+        }
+      });
+    })
+    .catch(err => {
+      return res.status(401).json({
+        error: {
+          status: 401,
+          message: err.toString()
+        },
+        data: {
+          classroomId: classroomId,
+          studentId: studentId,
+          pageTitle: 'Classrooms',
+          path: '/admin/classroom'
+        }
+      });
+    });
+};

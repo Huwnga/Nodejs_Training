@@ -80,31 +80,6 @@ exports.getAllClassroom = (req, res, next) => {
     });
 };
 
-// exports.getAClassroom = (req, res, next) => {
-//   const classroomId = req.params.classroomId;
-
-//   Class.findOne({
-//     where: {
-//       id: classroomId
-//     },
-//     include: {
-//       model: Account,
-//       include: [{
-//         model: Info_Account
-//       }]
-//     }
-//   })
-//     .then(classroom => {
-//       console.log(classroom.accounts[0].info_account);
-//       res.render('teacher/classroom', {
-//         classroom: classroom,
-//         pageTitle: 'Teacher Classroom',
-//         path: 'teacher/classroom'
-//       });
-//     })
-//     .catch(err => console.log(err));
-// }
-
 // exports.getAStudent = (req, res, next) => {
 //   const studentId = req.params.studentId;
 

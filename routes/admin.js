@@ -7,7 +7,6 @@ const isAdmin = require('../middleware/isAdmin');
 // routes.get('/dashbord', isAdmin, adminController.getDashBoard);
 // account
 routes.get('/account', isAdmin, adminController.getAllAccount);
-// routes.get('/account/info/update/:accountId', isAdmin, adminController.getUpdateInfoAccount);
 routes.post('/account/info/update/', isAdmin, adminController.postUpdateInfoAccount);
 routes.post('/account/active', isAdmin, adminController.getActiveAccount);
 routes.post('/account/inactive', isAdmin, adminController.getInActiveAccount);
