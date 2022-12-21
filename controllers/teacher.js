@@ -80,25 +80,193 @@ exports.getAllClassroom = (req, res, next) => {
     });
 };
 
-// exports.getAStudent = (req, res, next) => {
-//   const studentId = req.params.studentId;
+exports.postAddStudentWithClassroom = (req, res, next) => {
+  const classroomId = req.query.classroomId;
+  const accountId = req.body.accounts;
 
-//   Account.findOne({
-//     where: {
-//       id: studentId
-//     },
-//     include: { 
-//       all: true,
-//       nested: true 
-//     }
-//   })
-//     .then(student => {
-//       console.log(student);
-//       res.render('teacher/student', {
-//         student: student,
-//         pageTitle: 'Teacher Classroom',
-//         path: 'teacher/student'
-//       });
-//     })
-//     .catch(err => console.log(err));
-// }
+  Class.findOne({
+    where: {
+      id: classroomId
+    }
+  })
+    .then(classroom => {
+      if (classroom) {
+        Account.findOne({
+          where: {
+            id: accountId
+          }
+        })
+          .then(account => {
+            if (account) {
+              Account_Class.findOne({
+                where: {
+                  classId: classroomId,
+                  accountId: accountId
+                }
+              })
+                .then(account_class => {
+                  if (!account_class) {
+                    Account_Class.create({
+                      quantity: 0,
+                      classId: classroomId,
+                      accountId: accountId
+                    }).then(acc_class => {
+                      return res.status(200).json({
+                        error: {
+                          status: 200,
+                          message: 'Add Account in Classroom Successfully!'
+                        },
+                        data: {
+                          classes: acc_class,
+                          pageTitle: 'Classrooms',
+                          path: '/teacher/classroom'
+                        }
+                      });
+                    })
+                      .catch(err => {
+                        console.log(err);
+                        return res.status(401).json({
+                          error: {
+                            status: 401,
+                            message: err.toString()
+                          },
+                          data: {
+                            pageTitle: 'Classrooms',
+                            path: '/teacher/classroom'
+                          }
+                        });
+                      });
+                  } else {
+                    return res.status(200).json({
+                      error: {
+                        status: 200,
+                        message: 'This Account is already in Classroom Successfully!'
+                      },
+                      data: {
+                        classes: account_class,
+                        pageTitle: 'Classrooms',
+                        path: '/teacher/classroom'
+                      }
+                    });
+                  }
+                })
+                .catch(err => {
+                  console.log(err);
+                  return res.status(401).json({
+                    error: {
+                      status: 401,
+                      message: err.toString()
+                    },
+                    data: {
+                      pageTitle: 'Classrooms',
+                      path: '/teacher/classroom'
+                    }
+                  });
+                });
+            } else {
+              return res.status(401).json({
+                error: {
+                  status: 401,
+                  message: 'This Account Doesn\'t exists!'
+                },
+                data: {
+                  accountId: accountId,
+                  pageTitle: 'Classrooms',
+                  path: '/teacher/classroom'
+                }
+              });
+            }
+          })
+          .catch(err => {
+            console.log(err);
+            return res.status(401).json({
+              error: {
+                status: 401,
+                message: err.toString()
+              },
+              data: {
+                pageTitle: 'Classrooms',
+                path: '/teacher/classroom'
+              }
+            });
+          });
+      } else {
+        return res.status(401).json({
+          error: {
+            status: 401,
+            message: 'This Classroom Doesn\'t exists!'
+          },
+          data: {
+            classroomId: classroomId,
+            pageTitle: 'Classrooms',
+            path: '/teacher/classroom'
+          }
+        });
+      }
+    })
+    .catch(err => {
+      return res.status(401).json({
+        error: {
+          status: 401,
+          message: err.toString()
+        },
+        data: {
+          pageTitle: 'Classrooms',
+          path: '/teacher/classroom'
+        }
+      });
+    });
+};
+
+exports.postDeleteStudentWithClassroomId = (req, res, next) => {
+  const classroom_accountId = req.query.classroom_accountId;
+
+  Account_Class.findOne({
+    where: {
+      id: classroom_accountId
+    }
+  })
+    .then(account_class => {
+      if (account_class) {
+        account_class.destroy();
+
+        return res.status(200).json({
+          error: {
+            status: 200,
+            message: 'Remove Student in Classroom Successfully!'
+          },
+          data: {
+            classroomId: account_class.classroomId,
+            studentId: account_class.studentId,
+            pageTitle: 'Classrooms',
+            path: '/teacher/classroom'
+          }
+        });
+      } else {
+        return res.status(401).json({
+          error: {
+            status: 401,
+            message: "Delete faild! This student doesn't exists in classroom or This classroom doesn't exists!"
+          },
+          data: {
+            classroom_accountId: classroom_accountId,
+            pageTitle: 'Classrooms',
+            path: '/teacher/classroom'
+          }
+        });
+      }
+    })
+    .catch(err => {
+      return res.status(401).json({
+        error: {
+          status: 401,
+          message: err.toString()
+        },
+        data: {
+          classroom_accountId: classroom_accountId,
+          pageTitle: 'Classrooms',
+          path: '/teacher/classroom'
+        }
+      });
+    });
+};

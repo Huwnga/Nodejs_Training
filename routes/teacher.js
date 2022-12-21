@@ -5,16 +5,8 @@ const teacherController = require('../controllers/teacher');
 const isTeacher = require('../middleware/isTeacher');
 
 // teacher
-routes.get('/', isTeacher, teacherController.getAllClassroom);
-
-// routes.get('/teacher/classroom/:classroomId', teacherController.getClassroom);
-
-// routes.get('/teacher/classroom/:classroomId/add_student/:studentId', adminController.getAddStudentWithClassroomId);
-// routes.post('/teacher/classroom/:classroomId/add_student/:studentId', adminController.postAddStudentWithClassroomId);
-
-// routes.get('/teacher/classroom/:classroomId/delete_student/:studentId', adminController.getDeleteStudentWithClassroomId);
-// routes.post('/teacher/classroom/:classroomId/delete_student/:studentId', adminController.postDeleteStudentWithClassroomId);
-
-// routes.get('/teacher/student/:studentId', teacherController.getStudent);
+routes.get('/classroom', isTeacher, teacherController.getAllClassroom);
+routes.post('/classroom/add_student', isAdmin, teacherController.postAddStudentWithClassroom);
+routes.post('/classroom/delete_student', isAdmin, teacherController.postDeleteStudentWithClassroomId);
 
 module.exports = routes;
