@@ -728,7 +728,7 @@ exports.getActiveAccount = (req, res, next) => {
         return res.status(200).json({
           error: {
             status: 200,
-            message: 'Inactive Account Successfully!'
+            message: 'Active Account Successfully!'
           },
           data: {
             account: account,

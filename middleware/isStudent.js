@@ -38,23 +38,20 @@ module.exports = (req, res, next) => {
               path: '/404'
             }
           });
+        } else {
+          req.userId = data.userId;
+          next();
         }
       })
       .catch(err => {
-        return res.status(400).json({
+        return res.status(404).json({
           error: {
-            status: 400,
+            status: 404,
             message: err.toString()
           },
-          data: {
-            pageTitle: 'Page Not Found',
-            path: '/404'
-          }
+          data: {}
         });
       });
-
-    req.userId = data.userId;
-    next();
   } else {
     return res.status(401).json({
       error: {
