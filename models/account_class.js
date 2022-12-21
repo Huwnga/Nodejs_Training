@@ -11,8 +11,7 @@ const Account_Class = sequelize.define('account_class', {
   },
 
   quantity: {
-    type: Sequelize.INTEGER,
-    allowNull: false
+    type: Sequelize.INTEGER
   }
 });
 
