@@ -12,7 +12,10 @@ module.exports = (req, res, next) => {
           status: 401,
           message: err.toString()
         },
-        data: {}
+        data: {
+          pageTitle: 'Sign In',
+          path: '/auth/signin'
+        }
       });
     }
   }

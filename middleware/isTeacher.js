@@ -3,7 +3,7 @@ const Account = require('../models/account');
 
 module.exports = (req, res, next) => {
   const token = req.header('token');
-  
+
   try {
     var data = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
   } catch (err) {
@@ -13,7 +13,10 @@ module.exports = (req, res, next) => {
           status: 401,
           message: err.toString()
         },
-        data: {}
+        data: {
+          pageTitle: 'Sign In',
+          path: '/auth/signin'
+        }
       });
     }
   }
