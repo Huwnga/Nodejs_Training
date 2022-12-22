@@ -3,6 +3,9 @@ const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 
+// Call Controller
+const errorController = require('./controllers/error');
+
 const app = express();
 
 // Call routes
