@@ -1,0 +1,37 @@
+<% include('../includes/studentHeader.ejs') %>
+  <main>
+    <!-- To do List -->
+    <div class="page todolist" aria-disabled="true" id="todolist_page">
+      <div>
+        <!-- title -->
+        <div class="head">
+          <h1>My Todo List</h1>
+          <p id="count_todolist"></p>
+        </div>
+
+        <div class="body">
+          <!-- search and box -->
+          <div class="search">
+            <input type="search" id="inp_search" name="inp_search" placeholder="Type to search" maxlength="100">
+            <div class="btn-group">
+              <button class="btn btn-outline-info active" id="all">All</button>
+              <button class="btn btn-outline-info" id="active">Active</button>
+              <button class="btn btn-outline-info" id="done">Done</button>
+            </div>
+          </div>
+
+          <!-- list item -->
+          <div class="list" id="list_item">
+
+          </div>
+
+          <!-- add task -->
+          <div class="task">
+            <input type="text" name="task" id="task" placeholder="What needs to do be done" required />
+            <button" id="add" class="btn btn-outline-info">Add Task</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+<% include('../includes/end.ejs') %>

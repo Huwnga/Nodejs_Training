@@ -4,7 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 // Call Controller
-const errorController = require('./controllers/error');
+const errorController = require('./services/error');
 
 const app = express();
 
@@ -28,6 +28,6 @@ app.use('/auth', signin_up_outRoutes);
 app.use('/admin', adminRoutes);
 app.use('/teacher', teacherRoutes);
 app.use(studentRoutes);
-app.use(errorController.get404);
+app.use(errorController);
 
 app.listen(3000);
