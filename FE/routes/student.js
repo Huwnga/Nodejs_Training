@@ -1,4 +1,6 @@
 const express = require("express");
 const routes = express.Router();
 
-const studentController = require('../controllers/student');
+const studentService = require('../services/student');
+
+module.exports = routes;
