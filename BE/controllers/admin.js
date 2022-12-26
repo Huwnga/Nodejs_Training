@@ -1,4 +1,3 @@
-const multer = require('multer');
 const Account = require('../models/account');
 const Info_Account = require('../models/info_account');
 const Account_Class = require('../models/account_class');

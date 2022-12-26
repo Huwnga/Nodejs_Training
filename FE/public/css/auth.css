@@ -1,3 +1,23 @@
+html,
+body {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font: 14px "Lato", Arial, sans-serif;
+  min-width: 100%;
+  min-height: 100%;
+}
+
+.hidden {
+  content: '';
+  visibility: hidden;
+  height: 0;
+  display: contents;
+}
+
 .auth_form {
   display: flex;
   position: absolute;
@@ -9,36 +29,26 @@
   background-color: #19bc9d;
 }
 
-.form-controll{
+.form-controll {
   display: flex;
   flex-direction: column;
   margin-bottom: 5px;
-  width: 90%;
+  width: 100%;
 }
 
-.password__input-show_hide{
+.password__input-show_hide {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.password__input-show_hide .fa-solid{
+.password__input-show_hide .fa-solid {
   display: block;
   position: absolute;
-  right: 30px; 
+  right: 30px;
 }
 
 #login_form .card {
-  position: relative;
-  width: 400px;
-  height: auto;
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 35px 80px #00000026;
-  transition: 0.5s;
-}
-
-#signup_form .card {
   position: relative;
   width: 400px;
   height: auto;
@@ -70,7 +80,7 @@
 }
 
 .card__body-input {
-  width: 95%;
+  width: 100%;
   height: 40px;
   border: 0.5px solid;
   border-color: #d9dee0;
@@ -105,6 +115,12 @@
 
 .card__body-btn:active {
   background-color: #136d5b;
+}
+
+.card__body-btn:disabled {
+  background-color: #169f85;
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .card__body {
@@ -158,7 +174,7 @@
 
 .error {
   display: flex;
-  color:#FF0000;
+  color: #FF0000;
   align-items: flex-start;
   font-size: 10pt;
 }
