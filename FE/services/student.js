@@ -6,5 +6,5 @@ exports.getTodolist = (req, res, next) => {
 
   return res.render('student/index', {
     data: data
-  })
+  });
 }

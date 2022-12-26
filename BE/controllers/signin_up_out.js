@@ -19,37 +19,6 @@ exports.getSignin = (req, res, next) => {
   });
 };
 
-exports.getSignup = (req, res, next) => {
-  Role.findAll()
-    .then(roles => {
-      Class.findAll()
-        .then(classrooms => {
-          return res.json({
-            error: {
-              status: 200,
-              message: "OK"
-            },
-            data: {
-              roles: roles,
-              classrooms: classrooms,
-              pageTitle: 'Sign Up',
-              path: '/auth/signup'
-            }
-          });
-        });
-    })
-    .catch(err => res.status(400).json({
-      error: {
-        status: 400,
-        message: err
-      },
-      data: {
-        pageTitle: 'Page Not Found',
-        path: '/404'
-      }
-    }));
-};
-
 // exports.getLogout = (req, res, next) => {
 //   res.render('auth/sign-in.ejs', {
 //     pageTitle: '',
@@ -132,11 +101,9 @@ exports.postSignin = (req, res, next) => {
 };
 
 exports.postSignup = (req, res, next) => {
-  const username = req.body.signup_username;
-  const password = req.body.signup_password;
-  const full_name = req.body.signup_fullname;
-  const roleId = req.body.roles;
-  const classroomId = req.body.classrooms;
+  const username = req.body.username;
+  const password = req.body.password;
+  const full_name = req.body.full_name;
 
   Account.findOne({
     where: {
@@ -145,54 +112,27 @@ exports.postSignup = (req, res, next) => {
   })
     .then(account => {
       if (!account) {
-        Account.create(
-          {
-            username: username,
-            password: password,
-            status: 1,
-            roleId: roleId,
-          }
-        )
+        Account.create({
+          username: username,
+          password: password,
+          status: 1,
+          roleId: 3,
+        })
           .then(account => {
-            Info_Account.create(
-              {
-                full_name: full_name,
-                accountId: account.id,
-              }
-            );
-
-            if (parseInt(account.roleId) == 3) {
-              Account_Class.findOne({
-                classId: classroomId
-              })
-                .then(err => {
-                  Account_Class.create({
-                    quantity: 0,
-                    accountId: account.id,
-                    classId: classroomId
-                  });
-
-                  return res.status(201).json({
-                    error: {
-                      status: 201,
-                      message: 'Create Account Successfully!'
-                    },
-                    data: {
-                      nextPath: '/admin/account'
-                    }
-                  });
-                })
-                .catch(err => res.status(400).json({
+            Info_Account.create({
+              full_name: full_name,
+              accountId: account.id,
+            })
+              .catch(err => {
+                return res.status(400).json({
                   error: {
                     status: 400,
                     message: err
                   },
-                  data: {
-                    pageTitle: 'Page Not Found',
-                    path: '/404'
-                  }
-                }));
-            }
+                  data: {}
+                })
+              });
+
             return res.status(201).json({
               error: {
                 status: 201,
@@ -216,16 +156,15 @@ exports.postSignup = (req, res, next) => {
         });
       }
     })
-    .catch(err => res.status(400).json({
-      error: {
-        status: 400,
-        message: err
-      },
-      data: {
-        pageTitle: 'Page Not Found',
-        path: '/404'
-      }
-    }));
+    .catch(err => {
+      return res.status(400).json({
+        error: {
+          status: 400,
+          message: err
+        },
+        data: {}
+      })
+    });
 };
 
 exports.postLogout = (req, res, next) => {

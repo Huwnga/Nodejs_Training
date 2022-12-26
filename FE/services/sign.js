@@ -26,5 +26,9 @@ exports.postSignIn = (req, res, next) => {
 }
 
 exports.getSignUp = (req, res, next) => {
-  
+  return res.render('auth/signup', {
+    data: {
+      pageTitle: 'Sign Up'
+    }
+  });
 }
