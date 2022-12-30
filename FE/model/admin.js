@@ -2,28 +2,81 @@ const apiPort = "http://localhost:3000/admin";
 const pathAccount = "/account";
 const pathClassroom = "/classroom";
 
-const apiAdminManagementAccount = {
-  getAccounts: apiPort + pathAccount,
-  getAccountToDoList: apiPort + pathAccount + "/todolist",
-  postAddAccount: apiPort + pathAccount + "/add",
-  postUpdateAccount: apiPort + pathAccount + "/update",
-  postActiveAccount: apiPort + pathAccount + "/active",
-  postInactiveAccount: apiPort + pathAccount + "/inactive"
-}
+exports.apiUrlAccount = {
+  account: apiPort + pathAccount,
+  todolist: apiPort + pathAccount + "/todolist",
+  add: apiPort + pathAccount + "/add",
+  update: apiPort + pathAccount + "/update",
+  active: apiPort + pathAccount + "/active",
+  inactive: apiPort + pathAccount + "/inactive",
+  updateInfo: apiPort + pathAccount + "/info/update"
+};
 
-const apiAdminManagementClassroom = {
-  getClassrooms: apiPort + pathClassroom,
-  postAddClassroom: apiPort + pathClassroom + "/add",
-  postUpdateClassroom: apiPort + pathClassroom + "/update",
-  postDeleteClassroom: apiPort + pathClassroom + "/delete",
-  postAddStudentInClassroom: apiPort + pathClassroom + "/add-student",
-  postDeleteStudentInClassroom: apiPort + pathClassroom + "/delete-student"
-}
+exports.apiUrlClassroom = {
+  classroom: apiPort + pathClassroom,
+  add: apiPort + pathClassroom + "/add",
+  update: apiPort + pathClassroom + "/update",
+  delete: apiPort + pathClassroom + "/delete",
+  addStudent: apiPort + pathClassroom + "/add-student",
+  removeStudent: apiPort + pathClassroom + "/delete-student"
+};
 
-// account data
-exports.getAccounts = fetch(apiAdminManagementAccount.getAccounts).then((response) => response.json());
-exports.getAccountToDoList = fetch(apiAdminManagementAccount.getAccountToDoList).then((response) => response.json());
+// get
+exports.getAll = function (url, token) {
+  var headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("token", token);
 
+  const response = fetch(url, {
+    method: 'GET',
+    headers: headers,
+    redirect: 'follow'
+  });
 
-//classroom data
-exports.getClassrooms = fetch(apiAdminManagementClassroom.getClassrooms).then((response) => response.json());
+  return response;
+};
+
+exports.getOne = function (url, token, params) {
+  var headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("token", token);
+  
+  const response = fetch(url + "?" + new URLSearchParams(params), {
+    method: 'GET',
+    headers: headers,
+    redirect: 'follow'
+  });
+
+  return response;
+};
+
+// post
+exports.post = function (url, token, body) {
+  var headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("token", token);
+
+  const response = fetch(url, {
+    method: 'POST',
+    headers: headers,
+    body: JSON.stringify(body),
+    redirect: 'follow'
+  });
+
+  return response;
+};
+
+exports.postOne = function (url, token, body, params) {
+  var headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("token", token);
+
+  const response = fetch(url + "?" + new URLSearchParams(params), {
+    method: 'POST',
+    headers: headers,
+    body: JSON.stringify(body),
+    redirect: 'follow'
+  });
+
+  return response;
+};

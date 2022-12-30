@@ -1,0 +1,17 @@
+<%- include('../../includes/head.ejs') %>
+</head>
+
+<%- include('../../includes/adminNav.ejs') %>
+
+<main>
+  <div class="container">
+    <h1 class="display-4">Add Account</h1>
+
+    <form action="/admin/account/add" method="post">
+      <%- include('./feild.ejs') %>
+
+      <button type="submit" class="btn btn-dark">Add</button>
+    </form>
+  </div>
+</main>
+<%- include('../../includes/end.ejs') %>

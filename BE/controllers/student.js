@@ -37,10 +37,7 @@ exports.getTodolist = (req, res, next) => {
           status: 400,
           message: err.toString()
         },
-        data: {
-          pageTitle: 'Page Not Found',
-          path: '/404'
-        }
+        data: {}
       });
     });
 }
@@ -72,10 +69,16 @@ exports.getAllClassroom = (req, res, next) => {
         })
           .then(classroom => {
             res.status(200).json({
-              userId: userId,
-              accounts: classroom.accounts,
-              pageTitle: 'Classroom',
-              path: '/classroom'
+              error: {
+                status: 200,
+                message: 'OK'
+              },
+              data: {
+                userId: userId,
+                classroom: classroom,
+                pageTitle: 'Classroom',
+                path: '/classroom'
+              }
             });
           })
           .catch(err => {
@@ -130,15 +133,27 @@ exports.postTodolist = (req, res, next) => {
     accountId: userId
   })
     .then(task => {
-      return res.status(201).json({
-        error: {
-          status: 201,
-          message: 'Create a Task successfully!'
-        },
-        data: {
-          nextPath: '/todolist'
-        }
-      });
+      if (task) {
+        return res.status(200).json({
+          error: {
+            status: 200,
+            message: 'Create a Task successfully!'
+          },
+          data: {
+            nextPath: '/todolist'
+          }
+        });
+      } else {
+        return res.status(200).json({
+          error: {
+            status: 200,
+            message: 'Create a Task fail!'
+          },
+          data: {
+            nextPath: '/todolist'
+          }
+        });
+      }
     })
     .catch(err => {
       return res.status(400).json({
@@ -146,10 +161,7 @@ exports.postTodolist = (req, res, next) => {
           status: 400,
           message: err.toString()
         },
-        data: {
-          pageTitle: 'Page Not Found',
-          path: '/404'
-        }
+        data: {}
       });
     });
 }
@@ -172,7 +184,7 @@ exports.postTodolistComplete = (req, res, next) => {
 
         return res.status(200).json({
           error: {
-            status: 201,
+            status: 200,
             message: 'This Task is complete!'
           },
           data: {
@@ -182,7 +194,7 @@ exports.postTodolistComplete = (req, res, next) => {
       } else {
         return res.status(200).json({
           error: {
-            status: 401,
+            status: 200,
             message: 'This Task is dosen\'t exists!'
           },
           data: {
@@ -197,10 +209,7 @@ exports.postTodolistComplete = (req, res, next) => {
           status: 400,
           message: err.toString()
         },
-        data: {
-          pageTitle: 'Page Not Found',
-          path: '/404'
-        }
+        data: {}
       });
     });
 }
@@ -211,8 +220,7 @@ exports.postTodolistDelete = (req, res, next) => {
 
   Task.findOne({
     where: {
-      id: taskId,
-      accountId: userId
+      id: taskId
     }
   })
     .then(task => {
@@ -221,7 +229,7 @@ exports.postTodolistDelete = (req, res, next) => {
 
         return res.status(200).json({
           error: {
-            status: 201,
+            status: 200,
             message: 'Deleted this Task successfully!'
           },
           data: {
@@ -231,7 +239,7 @@ exports.postTodolistDelete = (req, res, next) => {
       } else {
         return res.status(200).json({
           error: {
-            status: 401,
+            status: 200,
             message: 'This Task is dosen\'t exists!'
           },
           data: {
@@ -246,10 +254,7 @@ exports.postTodolistDelete = (req, res, next) => {
           status: 400,
           message: err.toString()
         },
-        data: {
-          pageTitle: 'Page Not Found',
-          path: '/404'
-        }
+        data: {}
       });
     });
 }

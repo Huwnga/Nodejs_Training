@@ -1,51 +1,73 @@
-const apiPort = "http://localhost:3000/student";
+const apiPort = "http://localhost:3000";
 const pathToDolist = "/todolist";
 const pathClassroom = "/classroom";
 
-const apiToDoList = {
-  getToDoList: apiPort + pathToDolist,
-  postAddToDoList: apiPort + pathToDolist + "/add",
-  postCompleteToDoList: apiPort + pathToDolist + "/complete",
-  postDeleteToDoList: apiPort + pathToDolist + "/delete",
+exports.apiToDoList = {
+  todolist: apiPort + pathToDolist,
+  add: apiPort + pathToDolist + "/add",
+  complete: apiPort + pathToDolist + "/complete",
+  delete: apiPort + pathToDolist + "/delete",
 }
 
-const apiClassroom = {
-  getClassrooms: apiPort + pathClassroom
+exports.apiClassroom = {
+  classroom: apiPort + pathClassroom
 }
 
-// account data
-exports.getToDoList = function (token) {
-  const response = fetch(apiToDoList.getToDoList, {
+// get
+exports.getAll = function (url, token) {
+  var headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("token", token);
+
+  const response = fetch(url, {
     method: 'GET',
-    headers: {
-      'token': token
-    }
+    headers: headers,
+    redirect: 'follow'
   });
 
-  return response.json();
+  return response;
 }
 
-exports.postAddToDoList = function (token, body) {
-  const response = fetch(apiToDoList.postAddToDoList, {
+exports.getOne = function (url, token, params) {
+  var headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("token", token);
+  
+  const response = fetch(url + "?" + new URLSearchParams(params), {
+    method: 'GET',
+    headers: headers,
+    redirect: 'follow'
+  });
+
+  return response;
+}
+
+// post
+exports.post = function (url, token, body) {
+  var headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("token", token);
+
+  const response = fetch(url, {
     method: 'POST',
-    headers: {
-      'token': token
-    },
-    body: JSON.stringify(body)
+    headers: headers,
+    body: JSON.stringify(body),
+    redirect: 'follow'
   });
 
-  return response.json();
+  return response;
 }
 
+exports.postOne = function (url, token, params) {
+  var headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("token", token);
 
-//classroom data
-exports.getClassrooms = function (token, params) {
-  const response = fetch(apiClassroom.getClassrooms + '?' + new URLSearchParams(params), {
-    method: 'GET',
-    headers: {
-      'token': token
-    }
+  const response = fetch(url + "?" + new URLSearchParams(params), {
+    method: 'POST',
+    headers: headers,
+    redirect: 'follow'
   });
 
-  return response.json();
+  return response;
 }

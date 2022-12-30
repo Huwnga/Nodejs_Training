@@ -1,3 +1,53 @@
 <% include('../includes/head.ejs') %>
-  
-<% include('../includes/end.ejs') %>
+<link rel="stylesheet" href="/css/auth.css">
+</head>
+
+<body>
+  <main>
+    <div class="page auth_form" id="login_form">
+      <div class="card">
+        <div class="card__head">
+          <p class="title">Sign Up</p>
+        </div>
+        <div class="card__body">
+          <form method="POST" action="/auth/signin">
+            <div class="form-controll">
+              <input class="card__body-input" type="text" name="username" id="username" placeholder="Email or Phone" />
+              <span class="error none" id="username_error">
+                Please enter a valid mail
+              </span>
+            </div>
+
+            <div class="form-controll">
+              <input class="card__body-input" type="password" name="password" id="password" placeholder="Password" />
+              <span class="error none" id="password_error">
+                Please enter 8 characters with number, capital and small letter
+              </span>
+            </div>
+
+            <div class="input-group-text">
+              <input class="form-check-input mt-0" type="checkbox" id="show_hide_password">
+              <label for="">Show Password</label>
+            </div>
+
+            <button type="submit" class="card__body-btn disable" id="submit" disabled>Sign Up</button>
+          </form>
+
+          <div>
+            <%if (data.message !="undefined" ) { %>
+            <div class="form-group form-control error" style="font-weight: bold; color : rgb(210, 29, 29)">
+              <%= data.message %>
+            </div>
+            <% } %>
+          </div>
+        </div>
+
+        <div class="card__footer">
+          <p class="text">Already a member ?</p>
+          <a href="/auth/signin" class="card__footer-link">Sign In now</a>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script src="/js/signup.js"></script>
+  <% include('../includes/end.ejs') %>

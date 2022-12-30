@@ -31,6 +31,7 @@ exports.getSignin = (req, res, next) => {
 exports.postSignin = (req, res, next) => {
   const username = req.body.username;
   const password = req.body.password;
+
   Account.findOne({
     where: {
       username: username
@@ -53,6 +54,15 @@ exports.postSignin = (req, res, next) => {
           });
           account.save();
 
+          var path = '';
+          if (account.roleId == 1) {
+            path = '/admin/account';
+          } else if (account.roleId == 2) {
+            path = '/teacher/classroom';
+          } else {
+            path = '/student/todolist';
+          }
+
           return res.status(200).json({
             error: {
               status: 200,
@@ -60,7 +70,7 @@ exports.postSignin = (req, res, next) => {
             },
             data: {
               account: account,
-              role: account.roles
+              path: path
             }
           });
         } else {
@@ -88,22 +98,22 @@ exports.postSignin = (req, res, next) => {
         });
       }
     })
-    .catch(err => res.status(400).json({
-      error: {
-        status: 400,
-        message: err
-      },
-      data: {
-        pageTitle: 'Page Not Found',
-        path: '/404'
-      }
-    }));
+    .catch(err => {
+      return res.status(400).json({
+        error: {
+          status: 400,
+          message: err
+        },
+        data: {}
+      })
+    });
 };
 
 exports.postSignup = (req, res, next) => {
   const username = req.body.username;
   const password = req.body.password;
   const full_name = req.body.full_name;
+  const gender = req.body.genders;
 
   Account.findOne({
     where: {
@@ -121,6 +131,7 @@ exports.postSignup = (req, res, next) => {
           .then(account => {
             Info_Account.create({
               full_name: full_name,
+              gender: gender,
               accountId: account.id,
             })
               .catch(err => {
@@ -133,25 +144,24 @@ exports.postSignup = (req, res, next) => {
                 })
               });
 
-            return res.status(201).json({
+            return res.status(200).json({
               error: {
-                status: 201,
+                status: 200,
                 message: 'Create Account Successfully!'
               },
               data: {
-                nextPath: '/admin/account'
+                nextPath: '/auth/signin'
               }
             });
           });
       } else {
-        return res.status(401).json({
+        return res.status(200).json({
           error: {
-            status: 401,
+            status: 200,
             message: 'This username already exists!'
           },
           data: {
-            pageTitle: 'Sign Up',
-            path: '/auth/signup'
+            nextPath: '/auth/signin'
           }
         });
       }

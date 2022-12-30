@@ -1,0 +1,51 @@
+<% let account = data.account; %>
+
+<input type="hidden" name="id" value="<%= account.id ? account.id : '' %>">
+
+<div class="form-group">
+  <label for="username" class="font-weight-bold">Username</label>
+  <input type="text" class="form-control" id="username" name="username" value="<%= account.username ? account.username : '' %>">
+</div>
+<br>
+
+<div class="form-group">
+  <label for="password" class="font-weight-bold">Password</label>
+  <input type="password" class="form-control" id="password" name="password" value="<%= account.password ? account.password : '' %>">
+</div>
+<br>
+
+<div class="form-group">
+  <label for="full_name" class="font-weight-bold">Full Name</label>
+  <input type="text" class="form-control" id="full_name" name="full_name" value="<%= account.full_name ? account.full_name : '' %>">
+</div>
+<br>
+
+<div class="form-group">
+  <label for="gender" class="font-weight-bold">Gender</label>
+  <select name="gender" class="form-select" id="gender">
+      <option value="1" 
+      <%= account.gender && account.gender == "1" ? 'checked' : '' %>>
+        Male
+      </option>
+      <option value="2" 
+      <%= account.gender && account.gender == "2" ? 'checked' : '' %>>
+        Female
+      </option>
+  </select>
+</div>
+<br>
+
+<div class="form-group">
+  <label for="roles" class="font-weight-bold">Role</label>
+  <select name="roles" class="form-select" id="roles">
+      <option value="1" 
+      <%= account.gender && account.gender == "1" ? 'checked' : '' %>>
+        Male
+      </option>
+      <option value="2" 
+      <%= account.gender && account.gender == "2" ? 'checked' : '' %>>
+        Female
+      </option>
+  </select>
+</div>
+<br>

@@ -190,7 +190,7 @@ exports.getTodolistbyAccountId = (req, res, next) => {
 exports.postAddAccount = (req, res, next) => {
   const username = req.body.username;
   const password = req.body.password;
-  const full_name = req.body.fullname;
+  const full_name = req.body.full_name;
   const gender = req.body.gender;
   const roleId = req.body.roles;
 
@@ -227,17 +227,40 @@ exports.postAddAccount = (req, res, next) => {
                     gender: gender,
                     accountId: account.id
                   })
+                    .then(info => {
+                      if (info) {
+                        return res.status(200).json({
+                          error: {
+                            status: 200,
+                            message: 'Add Account Successfully!'
+                          },
+                          data: {
+                            account: account,
+                            pageTitle: 'All Account',
+                            path: '/admin/account'
+                          }
+                        });
+                      } else {
+                        return res.status(200).json({
+                          error: {
+                            status: 200,
+                            message: 'Add Account Faild!'
+                          },
+                          data: {
+                            body: req.body,
+                            pageTitle: 'All Account',
+                            path: '/admin/account/add'
+                          }
+                        });
+                      }
+                    })
                     .catch(err => {
                       return res.status(400).json({
                         error: {
                           status: 400,
                           message: err.toString()
                         },
-                        data: {
-                          account: account1,
-                          pageTitle: 'All Account',
-                          path: '/admin/account/add'
-                        }
+                        data: {}
                       });
                     });
                 })
@@ -247,14 +270,9 @@ exports.postAddAccount = (req, res, next) => {
                       status: 400,
                       message: err.toString()
                     },
-                    data: {
-                      pageTitle: 'All Account',
-                      path: '/admin/account'
-                    }
+                    data: {}
                   });
                 });
-
-              return account.id;
             } else {
               return res.status(401).json({
                 error: {
@@ -269,60 +287,19 @@ exports.postAddAccount = (req, res, next) => {
               });
             }
           })
-          .then(accId => {
-            Account.findOne({
-              where: {
-                id: accId,
-              },
-              include: {
-                all: true,
-                nested: true
-              }
-            })
-              .then(account => {
-                if (account) {
-                  return res.status(201).json({
-                    error: {
-                      status: 201,
-                      message: 'Add Account Successfully!'
-                    },
-                    data: {
-                      account: account,
-                      pageTitle: 'All Account',
-                      path: '/admin/account'
-                    }
-                  });
-                } else {
-                  return res.status(401).json({
-                    error: {
-                      status: 401,
-                      message: 'Add Account Faild!'
-                    },
-                    data: {
-                      account: account,
-                      pageTitle: 'All Account',
-                      path: '/admin/account'
-                    }
-                  });
-                }
-              });
-          })
           .catch(err => {
             return res.status(400).json({
               error: {
                 status: 400,
                 message: err.toString()
               },
-              data: {
-                pageTitle: 'All Account',
-                path: '/admin/account'
-              }
+              data: {}
             });
           });
       } else {
-        return res.status(401).json({
+        return res.status(200).json({
           error: {
-            status: 401,
+            status: 200,
             message: 'This username is exists!'
           },
           data: {
@@ -338,10 +315,7 @@ exports.postAddAccount = (req, res, next) => {
           status: 400,
           message: err.toString()
         },
-        data: {
-          pageTitle: 'All Account',
-          path: '/admin/account'
-        }
+        data: {}
       });
     });
 };
