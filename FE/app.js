@@ -50,6 +50,11 @@ fetch('http://localhost:3000/testConnect', {
   headers: headers,
   redirect: 'follow'
 })
+  .then(results => {
+    if (results) {
+      console.log('Test Connect To Api Success...');
+    }
+  })
   .catch(err => {
     console.log('Test Connect To Api Fail...');
   });

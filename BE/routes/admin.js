@@ -17,11 +17,13 @@ routes.get('/account/todolist', isAdmin, adminController.getTodolistbyAccountId)
 
 // classroom
 routes.get('/classroom', isAdmin, adminController.getAllClassroom);
-routes.post('/classroom/add', isAdmin, isAdmin, adminController.postAddClassroom);
-routes.get('/classroom/update', isAdmin, adminController.getUpdateClassroom);
+routes.post('/classroom/add', isAdmin, adminController.postAddClassroom);
 routes.post('/classroom/udpate', isAdmin, adminController.postUpdateClassroom);
 routes.post('/classroom/delete', isAdmin, adminController.postDeleteClassroom);
 routes.post('/classroom/add_student', isAdmin, adminController.postAddStudentWithClassroom);
-routes.post('/classroom/delete_student', isAdmin, adminController.postDeleteStudentWithClassroomId);
+routes.post('/classroom/delete_student', isAdmin, adminController.postDeleteStudentWithClassroom);
+
+// role
+routes.get('/role', adminController.getRoles);
 
 module.exports = routes;

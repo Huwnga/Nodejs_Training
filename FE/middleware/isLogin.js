@@ -5,6 +5,6 @@ module.exports = (req, res, next) => {
     next();
   } else {
     req.flash('error', 'Let\' Login!');
-    return res.redirect('/auth/login');
+    return res.redirect('/auth/signin');
   }
 }

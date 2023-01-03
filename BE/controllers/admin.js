@@ -7,7 +7,7 @@ const Task = require('../models/task');
 const { INTEGER } = require('sequelize');
 
 exports.getAllAccount = (req, res, next) => {
-  const accountId = parseInt(req.query.accountId);
+  const accountId = req.query.accountId;
   const userId = req.userId;
 
   Account.findOne({
@@ -41,13 +41,13 @@ exports.getAllAccount = (req, res, next) => {
                   account: account,
                   userId: userId,
                   pageTitle: 'Profile',
-                  path: '/account/accountId'
+                  path: '/admin/account'
                 }
               });
             } else {
-              return res.status(401).json({
+              return res.status(200).json({
                 error: {
-                  status: 401,
+                  status: 200,
                   message: 'This Account Doesn\'t exists'
                 },
                 data: {
@@ -324,7 +324,7 @@ exports.postUpdateAccount = (req, res, next) => {
   const id = req.body.id;
   const username = req.body.username;
   const password = req.body.password;
-  const full_name = req.body.fullname;
+  const full_name = req.body.full_name;
   const gender = req.body.gender;
   const roleId = req.body.roles;
 
@@ -343,14 +343,11 @@ exports.postUpdateAccount = (req, res, next) => {
           })
             .then(account => {
               if (!account) {
-                account.update(
-                  {
-                    username: username,
-                    password: password,
-                    status: 1,
-                    roleId: roleId,
-                  }
-                );
+                account.update({
+                  username: username,
+                  password: password,
+                  roleId: roleId,
+                });
                 account.save();
 
                 Info_Account.findOne({
@@ -367,11 +364,34 @@ exports.postUpdateAccount = (req, res, next) => {
                       info.save();
                     } else {
                       Info_Account.create({
-                        full_name: fullname,
+                        full_name: full_name,
                         avatar: account.role.name + account.id + ".png",
                         gender: gender,
                         accountId: id
                       })
+                        .then(info => {
+                          if (info) {
+                            return res.status(200).json({
+                              error: {
+                                status: 200,
+                                message: 'Update Account Successfully!'
+                              },
+                              data: {
+                                accountId: id
+                              }
+                            });
+                          } else {
+                            return res.status(200).json({
+                              error: {
+                                status: 200,
+                                message: 'Update Account Fail!'
+                              },
+                              data: {
+                                accountId: id
+                              }
+                            });
+                          }
+                        })
                         .catch(err => {
                           return res.status(400).json({
                             error: {
@@ -392,26 +412,13 @@ exports.postUpdateAccount = (req, res, next) => {
                         status: 400,
                         message: err.toString()
                       },
-                      data: {
-                        pageTitle: 'All Account',
-                        path: '/admin/account'
-                      }
+                      data: {}
                     });
                   });
-
-                return res.status(201).json({
-                  error: {
-                    status: 201,
-                    message: 'Update Account Successfully!'
-                  },
-                  data: {
-                    accountId: id
-                  }
-                });
               } else {
-                return res.status(401).json({
+                return res.status(200).json({
                   error: {
-                    status: 401,
+                    status: 200,
                     message: 'This username is exists!'
                   },
                   data: {
@@ -427,21 +434,16 @@ exports.postUpdateAccount = (req, res, next) => {
                   status: 400,
                   message: err.toString()
                 },
-                data: {
-                  pageTitle: 'All Account',
-                  path: '/admin/account'
-                }
+                data: {}
               });
             });
+
         } else {
-          acc.update(
-            {
-              username: username,
-              password: password,
-              status: 1,
-              roleId: roleId,
-            }
-          );
+          acc.update({
+            username: username,
+            password: password,
+            roleId: roleId,
+          });
           acc.save();
 
           Info_Account.findOne({
@@ -456,25 +458,64 @@ exports.postUpdateAccount = (req, res, next) => {
                   gender: gender,
                 });
                 info.save();
+
+                return res.status(200).json({
+                  error: {
+                    status: 200,
+                    message: 'Update Account Successfully!'
+                  },
+                  data: {
+                    account: acc,
+                    path: "/admin/account"
+                  }
+                });
               } else {
-                Info_Account.create({
-                  full_name: fullname,
-                  avatar: account.role.name + account.id + ".png",
-                  gender: gender,
-                  accountId: id
+                Role.findOne({
+                  where: {
+                    id: acc.roleId
+                  }
                 })
+                  .then(role => {
+                    Info_Account.create({
+                      full_name: full_name,
+                      avatar: role.name + acc.id + ".png",
+                      gender: gender,
+                      accountId: id
+                    })
+                      .then(info => {
+                        if (info) {
+                          return res.status(201).json({
+                            error: {
+                              status: 201,
+                              message: 'Update Account Successfully!'
+                            },
+                            data: {
+                              account: acc,
+                              path: "/admin/account"
+                            }
+                          });
+                        }
+                      })
+                      .catch(err => {
+                        return res.status(400).json({
+                          error: {
+                            status: 400,
+                            message: err.toString()
+                          },
+                          data: {}
+                        });
+                      });
+                  })
                   .catch(err => {
                     return res.status(400).json({
                       error: {
                         status: 400,
                         message: err.toString()
                       },
-                      data: {
-                        pageTitle: 'All Account',
-                        path: '/admin/account'
-                      }
+                      data: {}
                     });
-                  });;
+                  });
+
               }
             })
             .catch(err => {
@@ -483,29 +524,14 @@ exports.postUpdateAccount = (req, res, next) => {
                   status: 400,
                   message: err.toString()
                 },
-                data: {
-                  pageTitle: 'All Account',
-                  path: '/admin/account'
-                }
+                data: {}
               });
             });
-
-          return res.status(201).json({
-            error: {
-              status: 201,
-              message: 'Update Account Successfully!'
-            },
-            data: {
-              account: account,
-              pageTitle: "All Account",
-              path: "/admin/account"
-            }
-          });
         }
       } else {
-        return res.status(401).json({
+        return res.status(200).json({
           error: {
-            status: 401,
+            status: 200,
             message: 'This Account Doesn\'t exists!'
           },
           data: {
@@ -522,10 +548,7 @@ exports.postUpdateAccount = (req, res, next) => {
           status: 400,
           message: err.toString()
         },
-        data: {
-          pageTitle: 'All Account',
-          path: '/admin/account'
-        }
+        data: {}
       });
     });
 
@@ -622,7 +645,7 @@ exports.postUpdateInfoAccount = (req, res, next) => {
               info.save();
             } else {
               Info_Account.create({
-                full_name: fullname,
+                full_name: full_name,
                 avatar: account.role.name + account.id + ".png",
                 gender: gender,
                 dob: dob,
@@ -705,18 +728,17 @@ exports.getActiveAccount = (req, res, next) => {
           },
           data: {
             account: account,
-            pageTitle: 'All Account',
             path: '/admin/account'
           }
         });
       } else {
-        return res.status(401).json({
+        return res.status(200).json({
           error: {
-            status: 401,
-            message: 'This Account Doesn\'t exists'
+            status: 200,
+            message: 'This Account Doesn\'t exists !'
           },
           data: {
-            pageTitle: 'All Account',
+            accountId: account.id,
             path: '/admin/account'
           }
         });
@@ -763,9 +785,9 @@ exports.getInActiveAccount = (req, res, next) => {
           }
         });
       } else {
-        return res.status(401).json({
+        return res.status(200).json({
           error: {
-            status: 401,
+            status: 200,
             message: 'This Account Doesn\'t exists'
           },
           data: {
@@ -816,9 +838,9 @@ exports.getAllClassroom = (req, res, next) => {
             }
           });
         } else {
-          return res.status(401).json({
+          return res.status(200).json({
             error: {
-              status: 401,
+              status: 200,
               message: 'This Classroom Doesn\'t exists!'
             },
             data: {
@@ -835,11 +857,7 @@ exports.getAllClassroom = (req, res, next) => {
             status: 400,
             message: err.toString()
           },
-          data: {
-            classroomId: classroomId,
-            pageTitle: 'Classrooms',
-            path: '/admin/classroom'
-          }
+          data: {}
         });
       });
   } else {
@@ -863,10 +881,7 @@ exports.getAllClassroom = (req, res, next) => {
             status: 400,
             message: err.toString()
           },
-          data: {
-            pageTitle: 'Classrooms',
-            path: '/admin/classroom'
-          }
+          data: {}
         });
       });
   }
@@ -890,55 +905,6 @@ exports.postAddClassroom = (req, res, next) => {
           path: '/admin/classroom'
         }
       });
-    })
-    .catch(err => {
-      return res.status(401).json({
-        error: {
-          status: 401,
-          message: err.toString()
-        },
-        data: {
-          pageTitle: 'Classrooms',
-          path: '/admin/classroom'
-        }
-      });
-    });
-};
-
-exports.getUpdateClassroom = (req, res, next) => {
-  const classroomId = req.query.classroomId;
-
-  Class.findOne({
-    where: {
-      id: classroomId
-    }
-  })
-    .then(classroom => {
-      if (classroom) {
-        return res.status(200).json({
-          error: {
-            status: 200,
-            message: 'OK'
-          },
-          data: {
-            classroom: classroom,
-            pageTitle: 'Classrooms',
-            path: '/admin/classroom/udpate'
-          }
-        });
-      } else {
-        return res.status(401).json({
-          error: {
-            status: 401,
-            message: 'This Classroom Doesn\'t exists!'
-          },
-          data: {
-            classroomId: classroomId,
-            pageTitle: 'Classrooms',
-            path: '/admin/classroom'
-          }
-        });
-      }
     })
     .catch(err => {
       return res.status(401).json({
@@ -1222,7 +1188,7 @@ exports.postAddStudentWithClassroom = (req, res, next) => {
     });
 };
 
-exports.postDeleteStudentWithClassroomId = (req, res, next) => {
+exports.postDeleteStudentWithClassroom = (req, res, next) => {
   const classroom_accountId = req.query.classroom_accountId;
 
   Account_Class.findOne({
@@ -1274,3 +1240,27 @@ exports.postDeleteStudentWithClassroomId = (req, res, next) => {
       });
     });
 };
+
+exports.getRoles = (req, res, next) => {
+  Role.findAll()
+    .then(roles => {
+      return res.status(200).json({
+        error: {
+          status: 200,
+          message: 'OK'
+        },
+        data: {
+          roles: roles
+        }
+      });
+    })
+    .catch(err => {
+      return res.status(400).json({
+        error: {
+          status: 400,
+          message: err.toString()
+        },
+        data: {}
+      });
+    });
+}

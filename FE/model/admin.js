@@ -1,6 +1,7 @@
 const apiPort = "http://localhost:3000/admin";
 const pathAccount = "/account";
 const pathClassroom = "/classroom";
+const pathRole = "/role";
 
 exports.apiUrlAccount = {
   account: apiPort + pathAccount,
@@ -21,6 +22,10 @@ exports.apiUrlClassroom = {
   removeStudent: apiPort + pathClassroom + "/delete-student"
 };
 
+exports.apiUrlRole = {
+  role: apiPort + pathRole
+}
+
 // get
 exports.getAll = function (url, token) {
   var headers = new Headers();
@@ -36,7 +41,7 @@ exports.getAll = function (url, token) {
   return response;
 };
 
-exports.getOne = function (url, token, params) {
+exports.get = function (url, token, params) {
   var headers = new Headers();
   headers.append("Content-Type", "application/json");
   headers.append("token", token);

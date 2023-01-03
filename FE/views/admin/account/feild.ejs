@@ -1,5 +1,3 @@
-<% let account = data.account; %>
-
 <input type="hidden" name="id" value="<%= account.id ? account.id : '' %>">
 
 <div class="form-group">
@@ -16,7 +14,7 @@
 
 <div class="form-group">
   <label for="full_name" class="font-weight-bold">Full Name</label>
-  <input type="text" class="form-control" id="full_name" name="full_name" value="<%= account.full_name ? account.full_name : '' %>">
+  <input type="text" class="form-control" id="full_name" name="full_name" value="<%= account.info_account.full_name ? account.info_account.full_name : '' %>">
 </div>
 <br>
 
@@ -38,14 +36,17 @@
 <div class="form-group">
   <label for="roles" class="font-weight-bold">Role</label>
   <select name="roles" class="form-select" id="roles">
-      <option value="1" 
-      <%= account.gender && account.gender == "1" ? 'checked' : '' %>>
-        Male
+    <% for(let role of roles){ %>
+      <option value="<%= role.id %>"
+      <%= account.roleId && account.roleId == role.id ? 'checked' : '' %>>
+        <%= role.name %>
       </option>
-      <option value="2" 
-      <%= account.gender && account.gender == "2" ? 'checked' : '' %>>
-        Female
-      </option>
+    <% } %>
   </select>
 </div>
 <br>
+
+<a type="button" href="/admin/account" class="btn btn-info">
+  <i class="bi bi-arrow-left"></i>
+  Back to Index
+</a>

@@ -218,7 +218,7 @@ exports.postAddStudentWithClassroom = (req, res, next) => {
     });
 };
 
-exports.postDeleteStudentWithClassroomId = (req, res, next) => {
+exports.postDeleteStudentWithClassroom = (req, res, next) => {
   const classroom_accountId = req.query.classroom_accountId;
 
   Account_Class.findOne({

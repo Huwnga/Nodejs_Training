@@ -5,28 +5,6 @@ const Class = require('../models/class');
 const Info_Account = require('../models/info_account');
 const Role = require('../models/role');
 
-// Get Method
-exports.getSignin = (req, res, next) => {
-  return res.json({
-    error: {
-      status: 200,
-      message: "OK"
-    },
-    data: {
-      pageTitle: 'Sign In',
-      path: '/auth/signin'
-    }
-  });
-};
-
-// exports.getLogout = (req, res, next) => {
-//   res.render('auth/sign-in.ejs', {
-//     pageTitle: '',
-//     path: ''
-//   });
-// };
-
-
 // Post Method
 exports.postSignin = (req, res, next) => {
   const username = req.body.username;
@@ -42,7 +20,7 @@ exports.postSignin = (req, res, next) => {
     }
   })
     .then(account => {
-      if (account) {
+      if (account && ((account.status == 1 && account.roleId != 1) || account.roleId == 1 )) {
         if (account.password == password) {
           const token = jwt.sign(
             { userId: account.id },

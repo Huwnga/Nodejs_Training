@@ -1,0 +1,123 @@
+<%- include('../../includes/head.ejs') %>
+  <style>
+    body{
+      background-color: #f9f7f4;
+    }
+  </style>
+</head>
+
+<%- include('../../includes/adminNav.ejs') %>
+<% // begin varaiable
+let classrooms = data.classrooms; %>
+<main>
+  <div class="container">
+    <br>
+    <br>
+    <div>
+      <h1 class="display-4">
+        Classroom
+      </h1>
+    </div>
+    <br>
+
+    <div>
+      <a class="btn btn-dark" href="/admin/classroom/add">
+        <i class="bi bi-plus"></i>
+        Add
+      </a>
+    </div>
+    <br>
+
+    <%- include('../../includes/error.ejs') %>
+
+    <table class="table table-hover">
+      <thead class="thead" style="background-color: #acb2c7">
+        <tr>
+          <th scope="col">
+            No.
+          </th>
+
+          <th scope="col">
+            Name
+          </th>
+          
+          <th scope="col">
+            Quantity of Members
+          </th>
+
+          <th scope="col">
+            Created At
+          </th>
+
+          <th scope="col">
+            Updated At
+          </th>
+          
+          <th scope="col">
+            &nbsp;
+          </th>
+          
+          <th scope="col">
+            &nbsp;
+          </th>
+          
+          <th scope="col">
+            &nbsp;
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% let no = 1; %>
+          <% for(let classroom of classrooms) { 
+            let account_classes = classroom.account_classes %>
+            <tr>
+              <td>
+                <%= no %>
+              </td>
+
+              <td>
+                <%= classroom.name %>
+              </td>
+
+              <td>
+                <%= account_classes %>
+              </td>
+
+              <td>
+                <%= classroom.createdAt %>
+              </td>
+
+              <td>
+                <%= classroom.updatedAt %>
+              </td>
+
+              <td>
+                <a class="btn btn-outline-info" href="/admin/classroom/show?classroomId=<%= classroom.id %>">
+                  Details
+                </a>
+              </td>
+              
+              <td>
+                <a class="btn btn-outline-primary" href="/admin/account/edit?classroomId=<%= classroom.id %>">
+                  Edit
+                </a>
+              </td>
+              
+              <td>
+                <form action="/admin/account/delete?classroomId=<%= classroom.id %>" method="post">
+                  <button class="btn btn-outline-danger" type="submit">
+                    Delete
+                  </button>
+                </form>
+              </td>
+            </tr>
+          <% no++; %>
+        <% } %>
+      </tbody>
+    </table>
+    <br>
+  </div>
+
+</main>
+<%- include('../../includes/end.ejs') %>
