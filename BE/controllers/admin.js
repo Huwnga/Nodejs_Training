@@ -861,7 +861,12 @@ exports.getAllClassroom = (req, res, next) => {
         });
       });
   } else {
-    Class.findAll()
+    Class.findAll({
+      include: {
+        all: true,
+        nested: true
+      }
+    })
       .then(classrooms => {
         return res.status(200).json({
           error: {
@@ -894,9 +899,9 @@ exports.postAddClassroom = (req, res, next) => {
     name: name
   })
     .then(classroom => {
-      return res.status(201).json({
+      return res.status(200).json({
         error: {
-          status: 201,
+          status: 200,
           message: 'Create Classroom Successfully!'
         },
         data: {
@@ -907,15 +912,12 @@ exports.postAddClassroom = (req, res, next) => {
       });
     })
     .catch(err => {
-      return res.status(401).json({
+      return res.status(400).json({
         error: {
-          status: 401,
+          status: 400,
           message: err.toString()
         },
-        data: {
-          pageTitle: 'Classrooms',
-          path: '/admin/classroom'
-        }
+        data: {}
       });
     });
 };
@@ -926,15 +928,12 @@ exports.postUpdateClassroom = (req, res, next) => {
   const name = req.body.name;
 
   if (classroomId != id) {
-    return res.status(401).json({
+    return res.status(400).json({
       error: {
-        status: 401,
+        status: 400,
         message: 'Params id with feild id not equals!'
       },
-      data: {
-        pageTitle: 'Classrooms',
-        path: '/admin/classroom'
-      }
+      data: {}
     });
   }
 
@@ -950,9 +949,9 @@ exports.postUpdateClassroom = (req, res, next) => {
         });
         classroom.save();
 
-        return res.status(201).json({
+        return res.status(200).json({
           error: {
-            status: 201,
+            status: 200,
             message: 'Update Classroom Successfully'
           },
           data: {
@@ -962,9 +961,9 @@ exports.postUpdateClassroom = (req, res, next) => {
           }
         });
       } else {
-        return res.status(401).json({
+        return res.status(200).json({
           error: {
-            status: 401,
+            status: 200,
             message: 'This Classroom Doesn\'t exists!'
           },
           data: {
@@ -976,15 +975,12 @@ exports.postUpdateClassroom = (req, res, next) => {
       }
     })
     .catch(err => {
-      return res.status(401).json({
+      return res.status(400).json({
         error: {
-          status: 401,
+          status: 400,
           message: err.toString()
         },
-        data: {
-          pageTitle: 'Classrooms',
-          path: '/admin/classroom'
-        }
+        data: {}
       });
     });
 };
@@ -1080,30 +1076,27 @@ exports.postAddStudentWithClassroom = (req, res, next) => {
                       quantity: 0,
                       classId: classroomId,
                       accountId: accountId
-                    }).then(acc_class => {
-                      return res.status(200).json({
-                        error: {
-                          status: 200,
-                          message: 'Add Account in Classroom Successfully!'
-                        },
-                        data: {
-                          classes: acc_class,
-                          pageTitle: 'Classrooms',
-                          path: '/admin/classroom'
-                        }
-                      });
                     })
-                      .catch(err => {
-                        console.log(err);
-                        return res.status(401).json({
+                      .then(acc_class => {
+                        return res.status(200).json({
                           error: {
-                            status: 401,
-                            message: err.toString()
+                            status: 200,
+                            message: 'Add Account in Classroom Successfully!'
                           },
                           data: {
+                            classes: acc_class,
                             pageTitle: 'Classrooms',
                             path: '/admin/classroom'
                           }
+                        });
+                      })
+                      .catch(err => {
+                        return res.status(400).json({
+                          error: {
+                            status: 400,
+                            message: err.toString()
+                          },
+                          data: {}
                         });
                       });
                   } else {
@@ -1121,16 +1114,12 @@ exports.postAddStudentWithClassroom = (req, res, next) => {
                   }
                 })
                 .catch(err => {
-                  console.log(err);
-                  return res.status(401).json({
+                  return res.status(400).json({
                     error: {
-                      status: 401,
+                      status: 400,
                       message: err.toString()
                     },
-                    data: {
-                      pageTitle: 'Classrooms',
-                      path: '/admin/classroom'
-                    }
+                    data: {}
                   });
                 });
             } else {
@@ -1148,16 +1137,12 @@ exports.postAddStudentWithClassroom = (req, res, next) => {
             }
           })
           .catch(err => {
-            console.log(err);
-            return res.status(401).json({
+            return res.status(400).json({
               error: {
-                status: 401,
+                status: 400,
                 message: err.toString()
               },
-              data: {
-                pageTitle: 'Classrooms',
-                path: '/admin/classroom'
-              }
+              data: {}
             });
           });
       } else {
@@ -1175,25 +1160,22 @@ exports.postAddStudentWithClassroom = (req, res, next) => {
       }
     })
     .catch(err => {
-      return res.status(401).json({
+      return res.status(400).json({
         error: {
-          status: 401,
+          status: 400,
           message: err.toString()
         },
-        data: {
-          pageTitle: 'Classrooms',
-          path: '/admin/classroom'
-        }
+        data: {}
       });
     });
 };
 
 exports.postDeleteStudentWithClassroom = (req, res, next) => {
-  const classroom_accountId = req.query.classroom_accountId;
+  const account_classId = req.query.account_classId;
 
   Account_Class.findOne({
     where: {
-      id: classroom_accountId
+      id: account_classId
     }
   })
     .then(account_class => {
@@ -1213,10 +1195,10 @@ exports.postDeleteStudentWithClassroom = (req, res, next) => {
           }
         });
       } else {
-        return res.status(401).json({
+        return res.status(200).json({
           error: {
-            status: 401,
-            message: "Delete faild! This student doesn't exists in classroom or This classroom doesn't exists!"
+            status: 200,
+            message: "This student doesn't exists in classroom or this classroom doesn't exists!"
           },
           data: {
             classroom_accountId: classroom_accountId,
@@ -1227,16 +1209,12 @@ exports.postDeleteStudentWithClassroom = (req, res, next) => {
       }
     })
     .catch(err => {
-      return res.status(401).json({
+      return res.status(400).json({
         error: {
-          status: 401,
+          status: 400,
           message: err.toString()
         },
-        data: {
-          classroom_accountId: classroom_accountId,
-          pageTitle: 'Classrooms',
-          path: '/admin/classroom'
-        }
+        data: {}
       });
     });
 };

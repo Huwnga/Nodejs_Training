@@ -74,6 +74,7 @@ exports.getUpdateAccount = (req, res, next) => {
 }
 
 exports.postAccountActive = (req, res, next) => {
+  return renderEjsPageWithApiPost('messageAdminAccount', apiUrlAccount.active, req, res, next);
   const token = req.cookies.token;
   const params = req.query;
   const body = req.body;
@@ -95,6 +96,7 @@ exports.postAccountActive = (req, res, next) => {
 }
 
 exports.postAccountInactive = (req, res, next) => {
+  return renderEjsPageWithApiPost('messageAdminAccount', apiUrlAccount.inactive, req, res, next);
   const token = req.cookies.token;
   const params = req.query;
   const body = req.body;
@@ -116,6 +118,7 @@ exports.postAccountInactive = (req, res, next) => {
 }
 
 exports.postAddAccount = (req, res, next) => {
+  return renderEjsPageWithApiPost('messageAdminAccount', apiUrlAccount.add, req, res, next);
   const token = req.cookies.token;
   const body = req.body;
 
@@ -137,6 +140,7 @@ exports.postAddAccount = (req, res, next) => {
 }
 
 exports.postUpdateAccount = (req, res, next) => {
+  return renderEjsPageWithApiPost('messageAdminAccount', apiUrlAccount.update, req, res, next);
   const token = req.cookies.token;
   const body = req.body;
 
@@ -147,8 +151,7 @@ exports.postUpdateAccount = (req, res, next) => {
     .then(results => {
       const error = results.error;
       const data = results.data;
-      // console.log(error);
-      // console.log(data);
+
       if (error.status == 200) {
         req.flash('messageAdminAccount', error.message);
 
@@ -166,10 +169,14 @@ exports.getClassroom = async (req, res, next) => {
   await renderEjsPageWithApiGet("messageAdminClassroom", 'admin/classroom/show', apiUrlClassroom.classroom, req, res, next);
 }
 
+// get data a apiUrl and return htmlpage with data and message(only ejs frame)
 async function renderEjsPageWithApiGet(messageName, pagePath, urlApi, req, res, next) {
   const params = req.query;
   const message = req.flash(messageName);
   const token = req.cookies.token;
+  console.log(params);
+  console.log(params.toString());
+  console.log(params !== {});
 
   Admin.get(urlApi, token, params)
     .then(response => {
@@ -184,6 +191,28 @@ async function renderEjsPageWithApiGet(messageName, pagePath, urlApi, req, res, 
           data: data,
           message: message
         });
+      }
+    })
+    .catch(err => console.log(err));
+}
+
+// post data a apiUrl and return htmlpage with data and message(only ejs frame)
+async function renderEjsPageWithApiPost(messageName, urlApi, req, res, next) {
+  const params = req.query;
+  const token = req.cookies.token;
+
+  Admin.get(urlApi, token, params)
+    .then(response => {
+      return response.json();
+    })
+    .then(results => {
+      const error = results.error;
+      const data = results.data;
+
+      if (error.status == 200) {
+        req.flash(messageName, error.message);
+
+        return res.redirect(data.path);
       }
     })
     .catch(err => console.log(err));

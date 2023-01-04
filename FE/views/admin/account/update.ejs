@@ -18,13 +18,14 @@
     <form action="/admin/account/update" method="post">
       <% account = data.account; %>
 
-      <%- include('./feild.ejs') %>
+      <%- include('../partials/feild-account.ejs') %>
 
-      <button type="submit" class="btn btn-dark disabled">
+      <button type="submit" class="btn btn-dark disabled" id="submit">
         <i class="bi bi-pencil-square"></i>
         Edit
       </button>
     </form>
   </div>
 </main>
+<script src="/js/admin_account_valid_feild.js"></script>
 <%- include('../../includes/end.ejs') %>

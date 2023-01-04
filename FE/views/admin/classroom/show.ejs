@@ -1,135 +1,86 @@
 <%- include('../../includes/head.ejs') %>
-<style>
-  body {
-    background-color: #f9f7f4;
-  }
-</style>
+  <style>
+    body{
+      background-color: #f9f7f4;
+    }
+  </style>
 </head>
 
 <%- include('../../includes/adminNav.ejs') %>
-<% let classroom = data.classroom;
-  let info = account.info_account;%>
-
+<% // begin varaiable
+let classroom = data.classroom; 
+accounts = classroom.accounts; %>
 <main>
   <div class="container">
     <br>
     <br>
-    <h1 class="display-4">Account Details</h1>
+    <div>
+      <h1 class="display-4">
+        <%= classroom.name %>
+      </h1>
+    </div>
     <br>
 
-    <div class="container">
-      <dl class="row">
-        <div class="col-sm-6">
-          <div class="container">
-            <dt class="col-sm-3">
-              <i class="bi bi-person-fill"></i>
-              Classes
-            </dt>
-            <% for(let classroom of classes){ %>
-              <dd class="col-sm-9">
-                <a href="/admin/classroom/show?classroomId=<%= classroom.id %>">
-                  <%= classroom.name %>
-                </a>
-              </dd>
-            <% } %>
-          </div>
-        </div>
-
-        <div class="col-sm-6">
-          <div class="container">
-            <dt class="col-sm-3">
-              <i class="bi bi-person-fill"></i>
-              Username
-            </dt>
-            <dd class="col-sm-9">
-              <%= account && account.username ? account.username : 'No Infomation' %>
-            </dd>
-
-            <dt class="col-sm-3">
-              <i class="bi bi-person-rolodex"></i>
-              Role
-            </dt>
-            <dd class="col-sm-9">
-              <%= role && role.name ? role.name : 'No Infomation' %>
-            </dd>
-
-            <dt class="col-sm-3">
-              <i class="bi bi-person-badge-fill"></i>
-              Fullname
-            </dt>
-            <dd class="col-sm-9">
-              <%= info && info.full_name ? info.full_name : 'No Infomation' %>
-            </dd>
-
-            <% let gender = info && info.gender ? info.gender : "3" %>
-            <dt class="col-sm-3">
-              <% switch (gender) {
-              case "1": %>
-              <i class="bi bi-gender-male"></i>
-              <% break;
-              case "2": %>
-              <i class="bi bi-gender-female"></i>
-              <% break;
-              default: %>
-              <i class="bi bi-gender-ambiguous"></i>
-              <% break; 
-            } %>
-              Gender
-            </dt>
-            <dd class="col-sm-9">
-              <% switch (gender) {
-              case "1": %>
-              <%= 'Male' %>
-              <% break;
-              case "2": %>
-              <%= 'Female' %>
-              <% break;
-              default: %>
-              <%= 'Other' %>
-              <% break; 
-            } %>
-            </dd>
-
-            <dt class="col-sm-3">
-              <i class="bi bi-envelope-at-fill"></i>
-              Email
-            </dt>
-            <dd class="col-sm-9">
-              <%= account && account.username ? account.username : 'No Infomation' %>
-            </dd>
-
-            <dt class="col-sm-3">
-              <i class="bi bi-telephone-fill"></i>
-              Mobile
-            </dt>
-            <dd class="col-sm-9">
-              <%= info && info.mobile ? info.mobile : 'No Infomation' %>
-            </dd>
-
-            <dt class="col-sm-3">
-              <i class="bi bi-geo-alt-fill"></i>
-              Address
-            </dt>
-            <dd class="col-sm-9">
-              <%= info && info.address ? info.address : 'No Infomation' %>
-            </dd>
-
-            <dt class="col-sm-3">
-              <i class="bi bi-geo-alt-fill"></i>
-              Current Update
-            </dt>
-            <dd class="col-sm-9">
-              <%= account && account.updatedAt ? account.updatedAt : 'No Infomation' %>
-            </dd>
-          </div>
-        </div>
-      </dl>
+    <div>
+      <a class="btn btn-dark" href="/admin/classroom/add_student">
+        <i class="bi bi-plus"></i>
+        Add Student
+      </a>
     </div>
+    <br>
 
-    <a type="button" href="/admin/account" class="btn btn-info">
-      &lt; Back to Index
-    </a>
+    <%- include('../../includes/error.ejs') %>
+
+    <table class="table table-hover">
+      <thead class="thead" style="background-color: #acb2c7">
+        <!-- column -->
+        <tr>
+          <%- include('../partials/table-basic_column-account.ejs') %>
+    
+          <th scope="col">&nbsp;</th>
+    
+          <th scope="col">&nbsp;</th>
+    
+          <th scope="col">&nbsp;</th>
+    
+          <th scope="col">&nbsp;</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% no = 1; %>
+        <% for(account of accounts) { 
+          info = account.info_account; %>
+
+            <tr>
+              <%- include('../partials/table-basic_row-account.ejs') %>
+
+              <td>
+                <a class="btn btn-outline-info" href="/admin/account/show?accountId=<%= account.id %>">
+                  Details
+                </a>
+              </td>
+              
+              <td>
+                <a class="btn btn-outline-primary" href="/admin/account/edit?accountId=<%= account.id %>">
+                  Edit
+                </a>
+              </td>
+              
+              <td>
+                <form action="/admin/account/active?accountId=<%= account.id %>" method="post">
+                  <button class="btn btn-outline-success" type="submit">
+                    Remove
+                  </button>
+                </form>
+              </td>
+            </tr>
+          <% no++; %>
+        <% } %>
+      </tbody>
+    </table>
+    <br>
   </div>
-</main>
 
+</main>
 <%- include('../../includes/end.ejs') %>

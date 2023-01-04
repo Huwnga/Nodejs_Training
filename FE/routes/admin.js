@@ -16,7 +16,7 @@ routes.post('/account/inactive', isLogin, adminService.postAccountInactive);
 
 // classrooms routes
 routes.get('/classroom', isLogin, adminService.getClassrooms);
-// routes.get('/classroom/show', isLogin, adminService.getClassroom);
+routes.get('/classroom/show', isLogin, adminService.getClassroom);
 // routes.post('/classroom/add', isLogin, adminService.getAddClassroom);
 // routes.post('/classroom/add', isLogin, adminService.postAddClassroom);
 // routes.get('/classroom/update', isLogin, adminService.getUpdateClassroom);

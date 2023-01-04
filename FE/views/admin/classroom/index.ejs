@@ -33,65 +33,24 @@ let classrooms = data.classrooms; %>
     <table class="table table-hover">
       <thead class="thead" style="background-color: #acb2c7">
         <tr>
-          <th scope="col">
-            No.
-          </th>
-
-          <th scope="col">
-            Name
+          <%- include('../partials/table-basic_column-classroom.ejs') %>
+          
+          <th scope="col">&nbsp;</th>
+          
+          <th scope="col">&nbsp;
           </th>
           
-          <th scope="col">
-            Quantity of Members
-          </th>
-
-          <th scope="col">
-            Created At
-          </th>
-
-          <th scope="col">
-            Updated At
-          </th>
-          
-          <th scope="col">
-            &nbsp;
-          </th>
-          
-          <th scope="col">
-            &nbsp;
-          </th>
-          
-          <th scope="col">
-            &nbsp;
-          </th>
+          <th scope="col">&nbsp;</th>
         </tr>
       </thead>
 
       <tbody>
-        <% let no = 1; %>
-          <% for(let classroom of classrooms) { 
-            let account_classes = classroom.account_classes %>
+        <% no = 1; %>
+          <% for(classroom of classrooms) { 
+            accounts = classroom.accounts %>
             <tr>
-              <td>
-                <%= no %>
-              </td>
-
-              <td>
-                <%= classroom.name %>
-              </td>
-
-              <td>
-                <%= account_classes %>
-              </td>
-
-              <td>
-                <%= classroom.createdAt %>
-              </td>
-
-              <td>
-                <%= classroom.updatedAt %>
-              </td>
-
+              <%- include('../partials/table-basic_row-classroom.ejs') %>
+              
               <td>
                 <a class="btn btn-outline-info" href="/admin/classroom/show?classroomId=<%= classroom.id %>">
                   Details
@@ -99,7 +58,7 @@ let classrooms = data.classrooms; %>
               </td>
               
               <td>
-                <a class="btn btn-outline-primary" href="/admin/account/edit?classroomId=<%= classroom.id %>">
+                <a class="btn btn-outline-primary" href="/admin/classroom/edit?classroomId=<%= classroom.id %>">
                   Edit
                 </a>
               </td>

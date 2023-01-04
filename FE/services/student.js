@@ -123,9 +123,9 @@ exports.getClassrooms = (req, res, next) => {
 
 exports.getClassroom = (req, res, next) => {
   const token = req.cookies.token;
-  const query = req.query;
+  const params = req.query;
 
-  Student.getOne(apiClassroom.classroom, token, query)
+  Student.getOne(apiClassroom.classroom, token, params)
     .then(response => {
       return response.json();
     })

@@ -23,37 +23,21 @@ let accounts = data.classroom.accounts; %>
     <table class="table table-hover">
       <thead class="thead" style="background-color: #acb2c7">
         <tr>
-          <th scope="col">
-            No.
-          </th>
+          <th scope="col">No</th>
 
-          <th scope="col">
-            Username/Email
-          </th>
+          <th scope="col">Username/Email</th>
 
-          <th scope="col">
-            Position
-          </th>
+          <th scope="col">Position</th>
 
-          <th scope="col">
-            Full Name
-          </th>
+          <th scope="col">Full Name</th>
 
-          <th scope="col">
-            Gender
-          </th>
+          <th scope="col">Gender</th>
 
-          <th scope="col">
-            Dob
-          </th>
+          <th scope="col">Dob</th>
 
-          <th scope="col">
-            Mobile
-          </th>
+          <th scope="col">Mobile</th>
 
-          <th scope="col">
-            Address
-          </th>
+          <th scope="col">Address</th>
         </tr>
       </thead>
 
@@ -62,17 +46,11 @@ let accounts = data.classroom.accounts; %>
           <% for(let account of accounts) { 
             let info = account.info_account; %>
             <tr>
-              <td>
-                <%= no %>
-              </td>
+              <td><%= no %></td>
 
-              <td>
-                <%= account.username %>
-              </td>
+              <td><%= account.username %></td>
 
-              <td>
-                <%= account.role.name %>
-              </td>
+              <td><%= account.role.name %></td>
               
               <% if(info){ %>
                 <td>

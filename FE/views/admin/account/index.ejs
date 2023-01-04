@@ -32,131 +32,28 @@ let accounts = data.accounts; %>
 
     <table class="table table-hover">
       <thead class="thead" style="background-color: #acb2c7">
+        <!-- column -->
         <tr>
-          <th scope="col">
-            No.
-          </th>
-
-          <th scope="col">
-            Username
-          </th>
-
-          <th scope="col">
-            Role
-          </th>
-
-          <th scope="col">
-            Fullname
-          </th>
-
-          <th scope="col">
-            Gender
-          </th>
-
-          <th scope="col">
-            Dob
-          </th>
-
-          <th scope="col">
-            Mobile
-          </th>
-
-          <th scope="col">
-            Address
-          </th>
-
-          <th scope="col">
-            Status
-          </th>
-          
-          <th scope="col">
-            &nbsp;
-          </th>
-          
-          <th scope="col">
-            &nbsp;
-          </th>
-          
-          <th scope="col">
-            &nbsp;
-          </th>
-          
-          <th scope="col">
-            &nbsp;
-          </th>
+          <%- include('../partials/table-basic_column-account.ejs') %>
+    
+          <th scope="col">&nbsp;</th>
+    
+          <th scope="col">&nbsp;</th>
+    
+          <th scope="col">&nbsp;</th>
+    
+          <th scope="col">&nbsp;</th>
         </tr>
       </thead>
 
       <tbody>
-        <% let no = 1; %>
-          <% for(let account of accounts) { 
-            let info = account.info_account; %>
+        <% no = 1; %>
+        <% for(account of accounts) { 
+          info = account.info_account; %>
+
             <tr>
-              <td>
-                <%= no %>
-              </td>
-
-              <td>
-                <%= account.username %>
-              </td>
-
-              <td>
-                <%= account.role.name %>
-              </td>
+              <%- include('../partials/table-basic_row-account.ejs') %>
               
-              <% if(info){ %>
-                <td>
-                  <%= info.full_name ? info.full_name : 'No Infomation' %>
-                </td>
-                
-                <td>
-                  <% switch(info.gender){ 
-                    case 1: %>
-                      <%= 'Male' %>
-                      <% break; %>
-                    <% case 2: %>
-                      <%= 'Female' %>
-                      <% break; %>
-                    <% default: %>
-                      <%= 'Other' %>
-                      <% break; %>
-                  <% } %>
-                </td>
-                
-                <td>
-                  <%= info.dob ? info.dob : 'No Infomation' %>
-                </td>
-                
-                <td>
-                  <%= info.mobile ? info.mobile : 'No Infomation' %>
-                </td>
-                
-                <td>
-                  <%= info.address ? info.address : 'No Infomation' %>
-                </td>
-              <% } else { %>
-                <td>No Infomation</td>
-
-                <td>No Infomation</td>
-
-                <td>No Infomation</td>
-
-                <td>No Infomation</td>
-
-                <td>No Infomation</td>
-              <% } %>
-              
-              <td>
-                <% switch(account.status) { 
-                  case 0: %>
-                <%= 'Inactive' %>
-                  <% break;
-                  case 1: %>
-                <%= 'Active' %>
-                  <% break;
-                }%>
-              </td>
-
               <td>
                 <a class="btn btn-outline-info" href="/admin/account/show?accountId=<%= account.id %>">
                   Details
@@ -185,8 +82,10 @@ let accounts = data.accounts; %>
                 </form>
               </td>
             </tr>
-          <% no++; %>
-        <% } %>
+              
+            <% no++; %>
+          <% } %>
+
       </tbody>
     </table>
     <br>
