@@ -12,19 +12,19 @@
   <div class="container">
     <br>
     <br>
-    <h1 class="display-4">Edit Account</h1>
+    <h1 class="display-4">Edit Classroom</h1>
     <br>
 
-    <form action="/admin/account/update" method="post">
-      <% account = data.account; %>
+    <form action="/admin/classroom/update" method="post">
+      <% classroom = data.classroom; %>
 
-      <%- include('../partials/feild-account.ejs') %>
+      <%- include('../partials/feild-classroom.ejs') %>
 
-      <a type="button" href="/admin/account" class="btn btn-info">
+      <a type="button" href="/admin/classroom" class="btn btn-info">
         <i class="bi bi-arrow-left"></i>
-        Back to Account Index
+        Back to Classroom Index
       </a>
-
+      
       <button type="submit" class="btn btn-dark disabled" id="submit">
         <i class="bi bi-pencil-square"></i>
         Edit
@@ -32,5 +32,5 @@
     </form>
   </div>
 </main>
-<script src="/js/admin_account_valid_feild.js"></script>
+<script src="/js/admin_update_valid_feild.js"></script>
 <%- include('../../includes/end.ejs') %>

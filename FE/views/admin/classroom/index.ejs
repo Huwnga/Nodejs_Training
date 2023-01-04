@@ -1,9 +1,9 @@
 <%- include('../../includes/head.ejs') %>
-  <style>
-    body{
-      background-color: #f9f7f4;
-    }
-  </style>
+<style>
+  body {
+    background-color: #f9f7f4;
+  }
+</style>
 </head>
 
 <%- include('../../includes/adminNav.ejs') %>
@@ -15,7 +15,7 @@ let classrooms = data.classrooms; %>
     <br>
     <div>
       <h1 class="display-4">
-        Classroom
+        Classrooms
       </h1>
     </div>
     <br>
@@ -34,48 +34,49 @@ let classrooms = data.classrooms; %>
       <thead class="thead" style="background-color: #acb2c7">
         <tr>
           <%- include('../partials/table-basic_column-classroom.ejs') %>
-          
+
           <th scope="col">&nbsp;</th>
-          
+
           <th scope="col">&nbsp;
           </th>
-          
+
           <th scope="col">&nbsp;</th>
         </tr>
       </thead>
 
       <tbody>
         <% no = 1; %>
-          <% for(classroom of classrooms) { 
+        <% for(classroom of classrooms) { 
             accounts = classroom.accounts %>
-            <tr>
-              <%- include('../partials/table-basic_row-classroom.ejs') %>
-              
-              <td>
-                <a class="btn btn-outline-info" href="/admin/classroom/show?classroomId=<%= classroom.id %>">
-                  Details
-                </a>
-              </td>
-              
-              <td>
-                <a class="btn btn-outline-primary" href="/admin/classroom/edit?classroomId=<%= classroom.id %>">
-                  Edit
-                </a>
-              </td>
-              
-              <td>
-                <form action="/admin/account/delete?classroomId=<%= classroom.id %>" method="post">
-                  <button class="btn btn-outline-danger" type="submit">
-                    Delete
-                  </button>
-                </form>
-              </td>
-            </tr>
-          <% no++; %>
+        <tr>
+          <%- include('../partials/table-basic_row-classroom.ejs') %>
+
+          <td>
+            <a class="btn btn-outline-info" href="/admin/classroom/show?classroomId=<%= classroom.id %>">
+              Details
+            </a>
+          </td>
+
+          <td>
+            <a class="btn btn-outline-primary" href="/admin/classroom/edit?classroomId=<%= classroom.id %>">
+              Edit
+            </a>
+          </td>
+
+          <td>
+            <form action="/admin/classroom/delete?classroomId=<%= classroom.id %>" method="post">
+              <button class="btn btn-outline-danger" type="submit">
+                Delete
+              </button>
+            </form>
+          </td>
+        </tr>
+        <% no++; %>
         <% } %>
       </tbody>
     </table>
     <br>
+
   </div>
 
 </main>

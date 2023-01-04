@@ -27,6 +27,7 @@
               data-bs-toggle="dropdown" aria-expanded="false">
               Classrooms
             </a>
+            
             <ul class="dropdown-menu">
               <% for(let c of classrooms){ %>
                 <li>
@@ -34,7 +35,6 @@
                     href="/student/classroom?classroomId=<%= c.id %>">
                     <%= c.name %>
                   </a>
-
                 </li>
               <% } %>
             </ul>

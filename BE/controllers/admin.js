@@ -343,12 +343,12 @@ exports.postUpdateAccount = (req, res, next) => {
           })
             .then(account => {
               if (!account) {
-                account.update({
+                acc.update({
                   username: username,
                   password: password,
                   roleId: roleId,
                 });
-                account.save();
+                acc.save();
 
                 Info_Account.findOne({
                   where: {
@@ -377,7 +377,8 @@ exports.postUpdateAccount = (req, res, next) => {
                                 message: 'Update Account Successfully!'
                               },
                               data: {
-                                accountId: id
+                                accountId: id,
+                                path: '/admin/account'
                               }
                             });
                           } else {
@@ -387,7 +388,8 @@ exports.postUpdateAccount = (req, res, next) => {
                                 message: 'Update Account Fail!'
                               },
                               data: {
-                                accountId: id
+                                pageTitle: 'All Account',
+                                path: '/admin/account'
                               }
                             });
                           }
@@ -398,12 +400,9 @@ exports.postUpdateAccount = (req, res, next) => {
                               status: 400,
                               message: err.toString()
                             },
-                            data: {
-                              pageTitle: 'All Account',
-                              path: '/admin/account'
-                            }
+                            data: {}
                           });
-                        });;
+                        });
                     }
                   })
                   .catch(err => {
@@ -895,21 +894,50 @@ exports.getAllClassroom = (req, res, next) => {
 exports.postAddClassroom = (req, res, next) => {
   const name = req.body.name;
 
-  Class.create({
-    name: name
+  Class.findOne({
+    where: {
+      name: name
+    }
   })
-    .then(classroom => {
-      return res.status(200).json({
-        error: {
-          status: 200,
-          message: 'Create Classroom Successfully!'
-        },
-        data: {
-          classroom: classroom,
-          pageTitle: 'Classrooms',
-          path: '/admin/classroom'
-        }
-      });
+    .then(existsClass => {
+      if (existsClass) {
+        return res.status(200).json({
+          error: {
+            status: 200,
+            message: name + " is exists!"
+          },
+          data: {
+            pageTitle: 'Classrooms',
+            path: '/admin/classroom'
+          }
+        });
+      } else {
+        Class.create({
+          name: name
+        })
+        .then(classroom => {
+          return res.status(200).json({
+            error: {
+              status: 200,
+              message: 'Create Classroom Successfully!'
+            },
+            data: {
+              classroom: classroom,
+              pageTitle: 'Classrooms',
+              path: '/admin/classroom'
+            }
+          });
+        })
+        .catch(err => {
+          return res.status(400).json({
+            error: {
+              status: 400,
+              message: err.toString()
+            },
+            data: {}
+          });
+        });
+      }
     })
     .catch(err => {
       return res.status(400).json({
@@ -920,6 +948,7 @@ exports.postAddClassroom = (req, res, next) => {
         data: {}
       });
     });
+
 };
 
 exports.postUpdateClassroom = (req, res, next) => {
@@ -1008,7 +1037,7 @@ exports.postDeleteClassroom = (req, res, next) => {
 
         return res.status(200).json({
           error: {
-            status: 201,
+            status: 200,
             message: 'Delete Successfully!'
           },
           data: {
@@ -1018,9 +1047,9 @@ exports.postDeleteClassroom = (req, res, next) => {
           }
         });
       } else {
-        return res.status(401).json({
+        return res.status(200).json({
           error: {
-            status: 401,
+            status: 200,
             message: 'This Classroom Doesn\'t exists!'
           },
           data: {
@@ -1032,16 +1061,12 @@ exports.postDeleteClassroom = (req, res, next) => {
       }
     })
     .catch(err => {
-      return res.status(401).json({
+      return res.status(400).json({
         error: {
-          status: 401,
+          status: 400,
           message: err.toString()
         },
-        data: {
-          classroomId: classroomId,
-          pageTitle: 'Classrooms',
-          path: '/admin/classroom'
-        }
+        data: {}
       });
     });
 };

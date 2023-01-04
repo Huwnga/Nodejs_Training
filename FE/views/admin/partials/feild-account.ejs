@@ -1,8 +1,10 @@
 <input type="hidden" name="id" value="<%= account.id ? account.id : '' %>">
 
 <div class="form-group">
-  <label for="username" class="font-weight-bold">Username</label>
+  <label for="username" class="fw-bold">Username</label>
+
   <input type="text" class="form-control" id="username" name="username" value="<%= account.username ? account.username : '' %>" placeholder="abc@gmail.com">
+
   <span class="text-danger d-none" id="username_error">
     Please enter a valid mail!
   </span>
@@ -10,8 +12,10 @@
 <br>
 
 <div class="form-group">
-  <label for="password" class="font-weight-bold">Password</label>
+  <label for="password" class="fw-bold">Password</label>
+
   <input type="password" class="form-control" id="password" name="password" value="<%= account.password ? account.password : '' %>" placeholder="abcd1234">
+
   <span class="text-danger d-none" id="password_error">
     Please enter 8 characters with number, capital and small letter!
   </span>
@@ -19,8 +23,10 @@
 <br>
 
 <div class="form-group">
-  <label for="full_name" class="font-weight-bold">Full Name</label>
+  <label for="full_name" class="fw-bold">Full Name</label>
+
   <input type="text" class="form-control" id="full_name" name="full_name" value="<%= account.info_account.full_name ? account.info_account.full_name : '' %>" placeholder="Nguyen An">
+
   <span class="text-danger d-none" id="full_name_error">
     Please valid format (Firstname + Lastname)!
   </span>
@@ -28,7 +34,8 @@
 <br>
 
 <div class="form-group">
-  <label for="gender" class="font-weight-bold">Gender</label>
+  <label for="gender" class="fw-bold">Gender</label>
+
   <select name="gender" class="form-select" id="gender">
     <option value="1" <%= account.gender && account.gender == "1" ? 'checked' : '' %>>
       Male
@@ -37,6 +44,7 @@
       Female
     </option>
   </select>
+
   <span class="text-danger d-none" id="gender_error">
     Please select a gender!
   </span>
@@ -44,7 +52,8 @@
 <br>
 
 <div class="form-group">
-  <label for="roles" class="font-weight-bold">Role</label>
+  <label for="roles" class="fw-bold">Role</label>
+
   <select name="roles" class="form-select" id="roles">
     <% for(let role of roles){ %>
     <option value="<%= role.id %>" <%= account.roleId && account.roleId == role.id ? 'checked' : '' %>>
@@ -52,13 +61,9 @@
     </option>
     <% } %>
   </select>
+
   <span class="text-danger d-none" id="role_error">
     Please select a role!
   </span>
 </div>
 <br>
-
-<a type="button" href="/admin/account" class="btn btn-info">
-  <i class="bi bi-arrow-left"></i>
-  Back to Index
-</a>

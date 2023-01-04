@@ -1,9 +1,9 @@
 <%- include('../../includes/head.ejs') %>
-  <style>
-    body{
-      background-color: #f9f7f4;
-    }
-  </style>
+<style>
+  body {
+    background-color: #f9f7f4;
+  }
+</style>
 </head>
 
 <%- include('../../includes/adminNav.ejs') %>
@@ -36,13 +36,11 @@ accounts = classroom.accounts; %>
         <!-- column -->
         <tr>
           <%- include('../partials/table-basic_column-account.ejs') %>
-    
+
           <th scope="col">&nbsp;</th>
-    
+
           <th scope="col">&nbsp;</th>
-    
-          <th scope="col">&nbsp;</th>
-    
+
           <th scope="col">&nbsp;</th>
         </tr>
       </thead>
@@ -52,34 +50,39 @@ accounts = classroom.accounts; %>
         <% for(account of accounts) { 
           info = account.info_account; %>
 
-            <tr>
-              <%- include('../partials/table-basic_row-account.ejs') %>
+        <tr>
+          <%- include('../partials/table-basic_row-account.ejs') %>
 
-              <td>
-                <a class="btn btn-outline-info" href="/admin/account/show?accountId=<%= account.id %>">
-                  Details
-                </a>
-              </td>
-              
-              <td>
-                <a class="btn btn-outline-primary" href="/admin/account/edit?accountId=<%= account.id %>">
-                  Edit
-                </a>
-              </td>
-              
-              <td>
-                <form action="/admin/account/active?accountId=<%= account.id %>" method="post">
-                  <button class="btn btn-outline-success" type="submit">
-                    Remove
-                  </button>
-                </form>
-              </td>
-            </tr>
-          <% no++; %>
+          <td>
+            <a class="btn btn-outline-info" href="/admin/account/show?accountId=<%= account.id %>">
+              Details
+            </a>
+          </td>
+
+          <td>
+            <a class="btn btn-outline-primary" href="/admin/account/edit?accountId=<%= account.id %>">
+              Edit
+            </a>
+          </td>
+
+          <td>
+            <form action="/admin/account/active?accountId=<%= account.id %>" method="post">
+              <button class="btn btn-outline-success" type="submit">
+                Remove
+              </button>
+            </form>
+          </td>
+        </tr>
+        <% no++; %>
         <% } %>
       </tbody>
     </table>
     <br>
+
+    <a type="button" href="/admin/classroom" class="btn btn-info">
+      <i class="bi bi-arrow-left"></i>
+      Back to Classroom Index
+    </a>
   </div>
 
 </main>
