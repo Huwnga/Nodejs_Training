@@ -10,7 +10,8 @@
 <% let account = data.account;
   let info = account.info_account; 
   let role = account.role; 
-  let classes = account.classes; %>
+  let classes = account.classes; 
+  let tasks = account.tasks; %>
 <!-- convert to Date Time format DD/MM/YYYY HH:MM:SS -->
 <% 
   convertDateTimeToString = function(value) {
@@ -43,7 +44,7 @@
 
     <div class="container">
       <dl class="row">
-        <div class="col-sm-4">
+        <div class="col-sm-5">
           <div class="container">
             <dt class="col-sm-9">
               <i class="bi bi-image"></i>
@@ -57,109 +58,155 @@
           </div>
         </div>
 
-        <div class="col-sm-4">
-          <div class="container">
-            <dt class="col-sm-9">
-              <i class="bi bi-person-fill"></i>
-              Username
-            </dt>
-            <dd class="col-sm-9">
-              <%= account && account.username ? account.username : 'No Infomation' %>
-            </dd>
+        <div class="col-sm-3">
+          <dt class="col-sm-9">
+            <i class="bi bi-person-fill"></i>
+            Username
+          </dt>
+          <dd class="col-sm-9">
+            <%= account && account.username ? account.username : 'No Infomation' %>
+          </dd>
 
-            <dt class="col-sm-9">
-              <i class="bi bi-person-rolodex"></i>
-              Role
-            </dt>
-            <dd class="col-sm-9">
-              <%= role && role.name ? role.name : 'No Infomation' %>
-            </dd>
-
-            <dt class="col-sm-9">
-              <i class="bi bi-person-badge-fill"></i>
-              Fullname
-            </dt>
-            <dd class="col-sm-9">
-              <%= info && info.full_name ? info.full_name : 'No Infomation' %>
-            </dd>
-
-            <% let gender = info && info.gender ? info.gender : "3" %>
-            <dt class="col-sm-9">
-              <% switch (gender) {
-              case "1": %>
-              <i class="bi bi-gender-male"></i>
+          <dt class="col-sm-9">
+            <i class="bi bi-lightning-charge-fill"></i>
+            Status
+          </dt>
+          <dd class="col-sm-9">
+            <% switch(account.status) { 
+              case 0: %>
+              <span class="text-danger">Inactive</span>
               <% break;
-              case "2": %>
-              <i class="bi bi-gender-female"></i>
+              case 1: %>
+              <span class="text-success">Active</span>
               <% break;
               default: %>
-              <i class="bi bi-gender-ambiguous"></i>
-              <% break; 
-            } %>
-              Gender
-            </dt>
-            <dd class="col-sm-9">
-              <% switch (gender) {
-              case "1": %>
-              <%= 'Male' %>
+              <span class="text-danger">Inactive</span>
               <% break;
-              case "2": %>
-              <%= 'Female' %>
-              <% break;
-              default: %>
-              <%= 'Other' %>
-              <% break; 
-            } %>
-            </dd>
+            }%>
+          </dd>
 
-            <dt class="col-sm-9">
-              <i class="bi bi-envelope-at-fill"></i>
-              Email
-            </dt>
-            <dd class="col-sm-9">
-              <%= account && account.username ? account.username : 'No Infomation' %>
-            </dd>
+          <dt class="col-sm-9">
+            <i class="bi bi-person-rolodex"></i>
+            Role
+          </dt>
+          <dd class="col-sm-9">
+            <%= role && role.name ? role.name : 'No Infomation' %>
+          </dd>
 
-            <dt class="col-sm-9">
-              <i class="bi bi-telephone-fill"></i>
-              Mobile
-            </dt>
-            <dd class="col-sm-9">
-              <%= info && info.mobile ? info.mobile : 'No Infomation' %>
-            </dd>
+          <dt class="col-sm-9">
+            <i class="bi bi-person-badge-fill"></i>
+            Fullname
+          </dt>
+          <dd class="col-sm-9">
+            <%= info && info.full_name ? info.full_name : 'No Infomation' %>
+          </dd>
 
-            <dt class="col-sm-9">
-              <i class="bi bi-geo-alt-fill"></i>
-              Address
-            </dt>
-            <dd class="col-sm-9">
-              <%= info && info.address ? info.address : 'No Infomation' %>
-            </dd>
+          <% let gender = info && info.gender ? info.gender : "3" %>
+          <dt class="col-sm-9">
+            <% switch (gender) {
+            case "1": %>
+            <i class="bi bi-gender-male"></i>
+            <% break;
+            case "2": %>
+            <i class="bi bi-gender-female"></i>
+            <% break;
+            default: %>
+            <i class="bi bi-gender-ambiguous"></i>
+            <% break; 
+          } %>
+            Gender
+          </dt>
+          <dd class="col-sm-9">
+            <% switch (gender) {
+            case "1": %>
+            <%= 'Male' %>
+            <% break;
+            case "2": %>
+            <%= 'Female' %>
+            <% break;
+            default: %>
+            <%= 'Other' %>
+            <% break; 
+          } %>
+          </dd>
 
-            <dt class="col-sm-9">
-              <i class="bi bi-geo-alt-fill"></i>
-              Current Update
-            </dt>
-            <dd class="col-sm-9">
-              <%= account && account.updatedAt ? convertDateTimeToString(account.updatedAt) : 'No Infomation' %>
+          <dt class="col-sm-9">
+            <i class="bi bi-envelope-at-fill"></i>
+            Email
+          </dt>
+          <dd class="col-sm-9">
+            <%= account && account.username ? account.username : 'No Infomation' %>
+          </dd>
+
+          <dt class="col-sm-9">
+            <i class="bi bi-telephone-fill"></i>
+            Mobile
+          </dt>
+          <dd class="col-sm-9">
+            <%= info && info.mobile ? info.mobile : 'No Infomation' %>
+          </dd>
+
+          <dt class="col-sm-9">
+            <i class="bi bi-geo-alt-fill"></i>
+            Address
+          </dt>
+          <dd class="col-sm-9">
+            <%= info && info.address ? info.address : 'No Infomation' %>
+          </dd>
+
+          <dt class="col-sm-9">
+            <i class="bi bi-geo-alt-fill"></i>
+            Current Update
+          </dt>
+          <dd class="col-sm-9">
+            <%= account && account.updatedAt ? convertDateTimeToString(account.updatedAt) : 'No Infomation' %>
+          </dd>
+        </div>
+        
+        <div class="col-sm-2">
+          <dt class="col-sm-9">
+            <i class="bi bi-image"></i>
+            To Do List
+          </dt>
+          <% let noTask = 1; %>
+          <% for(let task of tasks) { %>
             </dd>
-          </div>
+            <dd class="col-sm-9">
+              <span>
+                <%= noTask %>.
+              </span>
+              <br>
+              
+              Name: <%= task.name %>
+              Status: 
+              <% switch(task.status) { 
+                case 0: %>
+                <span class="text-success">Completed</span>
+                <% break;
+                case 1: %>
+                <span class="text-info">Active</span>
+                <% break;
+                default: %>
+                <span class="text-danger">Deleted</span>
+                <% break;
+              }%>
+            </dd>
+            <% noTask ++ ; %>
+          <% } %>
         </div>
 
-        <div class="col-sm-4">
-          <div class="container">
-            <dt class="col-sm-9">
-              <i class="bi bi-person-fill"></i>
-              Classes
-            </dt>
-            <% for(let classroom of classes){ %>
-            <dd class="col-sm-9">
-              <a href="/admin/classroom/show?classroomId=<%= classroom.id %>">
-                <%= classroom.name %>
-              </a>
-            </dd>
-            <% } %>
-          </div>
+        <div class="col-sm-2">
+          <dt class="col-sm-9">
+            <i class="bi bi-person-fill"></i>
+            Classes
+          </dt>
+          <% for(let classroom of classes){ %>
+          <dd class="col-sm-9">
+            <a href="/admin/classroom/show?classroomId=<%= classroom.id %>">
+              <%= classroom.name %>
+            </a>
+          </dd>
+          <% } %>
         </div>
 
       </dl>
