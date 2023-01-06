@@ -50,3 +50,5 @@ function validated() {
 username.addEventListener('keyup', validated);
 password.addEventListener('keyup', validated);
 full_name.addEventListener('keyup', validated);
+gender.addEventListener('click', validated);
+roles.addEventListener('click', validated);
