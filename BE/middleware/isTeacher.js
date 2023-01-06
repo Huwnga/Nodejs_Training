@@ -29,15 +29,14 @@ module.exports = (req, res, next) => {
       }
     })
       .then(account => {
-        if (!account.roleId != 2) {
-          return res.status(404).json({
+        if (account.roleId != 2) {
+          return res.status(200).json({
             error: {
-              status: 404,
-              message: 'Page Not Found'
+              status: 401,
+              message: 'Don\'t have permission in this page!'
             },
             data: {
-              pageTitle: 'Page Not Found',
-              path: '/404'
+              path: '/auth/signin'
             }
           });
         } else {

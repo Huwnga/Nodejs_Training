@@ -169,7 +169,11 @@ exports.postDeleteClassroom = (req, res, next) => {
   return renderEjsPageWithApiPost("messageAdminClassroom", apiUrlClassroom.delete, req, res, next);
 }
 
-exports.postDeleteStudentWithClassroom = (req, res, next) => {
+exports.postAddAccountWithClassroom = (req, res, next) => {
+  return renderEjsPageWithApiPost("messageAdminClassroom", apiUrlClassroom.addStudent, req, res, next);
+}
+
+exports.postDeleteAccountWithClassroom = (req, res, next) => {
   return renderEjsPageWithApiPost("messageAdminClassroom", apiUrlClassroom.removeStudent, req, res, next);
 }
 

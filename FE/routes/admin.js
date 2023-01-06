@@ -23,7 +23,7 @@ routes.get('/classroom/edit', isLogin, adminService.getUpdateClassroom);
 routes.post('/classroom/update', isLogin, adminService.postUpdateClassroom);
 routes.post('/classroom/delete', isLogin, adminService.postDeleteClassroom);
 routes.get('/classroom/add_account', isLogin, adminService.getAddStudentWithClassroom);
-// routes.post('/classroom/add_student', isLogin, adminService.postAddStudentWithClassroom);
-routes.post('/classroom/delete_student', isLogin, adminService.postDeleteStudentWithClassroom);
+routes.post('/classroom/add_student', isLogin, adminService.postAddAccountWithClassroom);
+routes.post('/classroom/delete_student', isLogin, adminService.postDeleteAccountWithClassroom);
 
 module.exports = routes;

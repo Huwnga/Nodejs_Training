@@ -14,7 +14,7 @@ const app = express();
 // Call routes
 const signRoutes = require('./routes/sign');
 const adminRoutes = require('./routes/admin');
-// const teacherRoutes = require('./routes/teacher');
+const teacherRoutes = require('./routes/teacher');
 const studentRoutes = require('./routes/student');
 
 // set views
@@ -38,7 +38,7 @@ app.use(
 // Use routes
 app.use('/auth', signRoutes);
 app.use('/admin', adminRoutes);
-// app.use('/teacher', teacherRoutes);
+app.use('/teacher', teacherRoutes);
 app.use('/student', studentRoutes);
 // app.use(errorController);
 

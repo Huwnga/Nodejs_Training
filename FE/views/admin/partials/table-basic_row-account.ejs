@@ -1,9 +1,10 @@
 <td><%= no %></td>
 
 <td>
-  <%= account && account.username ? account.username : 'No Information' %>
+  <div data-toggle="tooltip">
+    <%= account && account.username ? account.username : 'No Information' %>
+  </div>
 </td>
-
 <td>
   <%= account && account.role && account.role.name ? account.role.name : '' %>
 </td>
