@@ -212,7 +212,7 @@ function renderEjsPageWithApiPost (messageName, urlApi, req, res, next) {
     .then(results => {
       const error = results.error;
       const data = results.data;
-      console.log(data.body);
+      console.log(results);
 
       if(data.body){
         res.body = data.body;

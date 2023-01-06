@@ -1212,9 +1212,8 @@ exports.postAddStudentWithClassroom = (req, res, next) => {
 };
 
 exports.postDeleteStudentWithClassroom = (req, res, next) => {
-
   const classroomId = req.body.classroomId;
-  const accountId = req.body.accounts;
+  const accountId = req.body.accountId;
 
   Class.findOne({
     where: {
