@@ -14,6 +14,8 @@
     <br>
     <h1 class="display-4">Add Account</h1>
     <br>
+    
+    <%- include('../../includes/error_message.ejs') %>
 
     <form action="/admin/account/add" method="post">
       <% account = data.account; %>

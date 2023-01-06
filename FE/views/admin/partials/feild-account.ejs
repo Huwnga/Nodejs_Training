@@ -1,9 +1,9 @@
-<input type="hidden" name="id" value="<%= account.id ? account.id : '' %>">
+<input type="hidden" name="id" value="<%= account && account.id ? account.id : '' %>">
 
 <div class="form-group">
   <label for="username" class="fw-bold">Username</label>
 
-  <input type="text" class="form-control" id="username" name="username" value="<%= account.username ? account.username : '' %>" placeholder="abc@gmail.com">
+  <input type="text" class="form-control" id="username" name="username" value="<%= account && account.username ? account.username : '' %>" placeholder="abc@gmail.com">
 
   <span class="text-danger d-none" id="username_error">
     Please enter a valid mail!
@@ -14,7 +14,7 @@
 <div class="form-group">
   <label for="password" class="fw-bold">Password</label>
 
-  <input type="password" class="form-control" id="password" name="password" value="<%= account.password ? account.password : '' %>" placeholder="abcd1234">
+  <input type="password" class="form-control" id="password" name="password" value="<%= account && account.password ? account.password : '' %>" placeholder="abcd1234">
 
   <span class="text-danger d-none" id="password_error">
     Please enter 8 characters with number, capital and small letter!
@@ -25,7 +25,7 @@
 <div class="form-group">
   <label for="full_name" class="fw-bold">Full Name</label>
 
-  <input type="text" class="form-control" id="full_name" name="full_name" value="<%= account.info_account.full_name ? account.info_account.full_name : '' %>" placeholder="Nguyen An">
+  <input type="text" class="form-control" id="full_name" name="full_name" value="<%= account && account.info_account && account.info_account.full_name ? account.info_account.full_name : '' %>" placeholder="Nguyen An">
 
   <span class="text-danger d-none" id="full_name_error">
     Please valid format (Firstname + Lastname)!
@@ -37,10 +37,10 @@
   <label for="gender" class="fw-bold">Gender</label>
 
   <select name="gender" class="form-select" id="gender">
-    <option value="1" <%= account.gender && account.gender == "1" ? 'checked' : '' %>>
+    <option value="1" <%= account && account.gender && account.gender == "1" ? 'checked' : '' %>>
       Male
     </option>
-    <option value="2" <%= account.gender && account.gender == "2" ? 'checked' : '' %>>
+    <option value="2" <%= account && account.gender && account.gender == "2" ? 'checked' : '' %>>
       Female
     </option>
   </select>
@@ -56,7 +56,7 @@
 
   <select name="roles" class="form-select" id="roles">
     <% for(let role of roles){ %>
-    <option value="<%= role.id %>" <%= account.roleId && account.roleId == role.id ? 'checked' : '' %>>
+    <option value="<%= role.id %>" <%= account && account.roleId && account.roleId == role.id ? 'checked' : '' %>>
       <%= role.name %>
     </option>
     <% } %>

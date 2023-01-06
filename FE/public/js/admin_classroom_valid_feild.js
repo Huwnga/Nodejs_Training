@@ -2,7 +2,7 @@ const class_name = document.getElementById('name');
 const class_name_error = document.getElementById('name_error');
 const submit = document.getElementById('submit');
 
-const class_name_pattern = /^(?=.*[0-9])(?=.*[A-Z])([A-Z0-9]{6})$/;
+const class_name_pattern = /^(?=.*[0-9])(?=.*[A-Z])([A-Z0-9]{6,8})$/;
 
 function validated() {
   flag = false;

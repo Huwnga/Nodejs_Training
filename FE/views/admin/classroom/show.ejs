@@ -22,22 +22,18 @@ accounts = classroom.accounts; %>
     <br>
 
     <div>
-      <a class="btn btn-dark" href="/admin/classroom/add_student">
+      <a class="btn btn-dark" href="/admin/classroom/add_account?classroomId=<%= classroom.id %>">
         <i class="bi bi-plus"></i>
-        Add Student
+        Add Account
       </a>
     </div>
     <br>
-
-    <%- include('../../includes/error.ejs') %>
 
     <table class="table table-hover">
       <thead class="thead" style="background-color: #acb2c7">
         <!-- column -->
         <tr>
           <%- include('../partials/table-basic_column-account.ejs') %>
-
-          <th scope="col">&nbsp;</th>
 
           <th scope="col">&nbsp;</th>
 
@@ -60,14 +56,12 @@ accounts = classroom.accounts; %>
           </td>
 
           <td>
-            <a class="btn btn-outline-primary" href="/admin/account/edit?accountId=<%= account.id %>">
-              Edit
-            </a>
-          </td>
+            <form action="/admin/classroom/delete_student" method="post">
+              <input type="hidden" name="accountId" value="<%= account.id ? account.id : '' %>">
 
-          <td>
-            <form action="/admin/account/active?accountId=<%= account.id %>" method="post">
-              <button class="btn btn-outline-success" type="submit">
+              <input type="hidden" name="classroomId" value="<%= classroom.id ? classroom.id : '' %>">
+
+              <button class="btn btn-outline-danger" type="submit">
                 Remove
               </button>
             </form>

@@ -18,8 +18,8 @@ exports.apiUrlClassroom = {
   add: apiPort + pathClassroom + "/add",
   update: apiPort + pathClassroom + "/update",
   delete: apiPort + pathClassroom + "/delete",
-  addStudent: apiPort + pathClassroom + "/add-student",
-  removeStudent: apiPort + pathClassroom + "/delete-student"
+  addStudent: apiPort + pathClassroom + "/add_student",
+  removeStudent: apiPort + pathClassroom + "/delete_student"
 };
 
 exports.apiUrlRole = {
