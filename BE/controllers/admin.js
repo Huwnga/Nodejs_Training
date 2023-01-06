@@ -1091,7 +1091,7 @@ exports.postDeleteClassroom = (req, res, next) => {
 };
 
 exports.postAddStudentWithClassroom = (req, res, next) => {
-  const classroomId = req.body.classroomId;
+  const classroomId = req.query.classroomId;
   const accountId = req.body.accounts;
 
   Class.findOne({
@@ -1151,7 +1151,7 @@ exports.postAddStudentWithClassroom = (req, res, next) => {
                       },
                       data: {
                         body: JSON.stringify(req.body),
-                        path: '/admin/classroom/add_account'
+                        path: "/admin/classroom/add_account?classroomId=" + classroom.id
                       }
                     });
                   }
@@ -1173,7 +1173,7 @@ exports.postAddStudentWithClassroom = (req, res, next) => {
                 },
                 data: {
                   body: JSON.stringify(req.body),
-                  path: '/admin/classroom/add_account'
+                  path: "/admin/classroom/add_account?classroomId=" + classroom.id
                 }
               });
             }
