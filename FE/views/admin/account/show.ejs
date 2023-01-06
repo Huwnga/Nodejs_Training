@@ -50,7 +50,9 @@
               Avatar
             </dt>
             <dd class="col-sm-9">
-              <%= account && account.username ? account.username : 'No Infomation' %>
+              <% if(info && info.avatar) { %>
+                <img src="/avatar/<%= info.avatar %>" alt="">
+              <% } %>
             </dd>
           </div>
         </div>
