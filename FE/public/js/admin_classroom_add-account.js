@@ -6,8 +6,10 @@ function validated() {
 
   if (flag) {
     submit.classList.add('disabled');
+    submit.disabled = true;
   } else {
     submit.classList.remove('disabled');
+    submit.disabled = false;
   }
 }
 

@@ -12,6 +12,17 @@
 <br>
 
 <div class="form-group">
+  <label for="avatar" class="fw-bold">Avatar</label>
+
+  <input type="file" class="form-control" id="avatar" name="avatar" value="<%= account && account.info_account && account.info_account.avatar ? account.info_account.avatar : '' %>" placeholder="Please choose a image!">
+
+  <span class="text-danger d-none" id="avartar_error">
+    Please choose a image!
+  </span>
+</div>
+<br>
+
+<div class="form-group">
   <label for="password" class="fw-bold">Password</label>
 
   <input type="password" class="form-control" id="password" name="password" value="<%= account && account.password ? account.password : '' %>" placeholder="abcd1234">
@@ -54,7 +65,7 @@
 <div class="form-group">
   <label for="roles" class="fw-bold">Role</label>
 
-  <select name="roles" class="form-select" id="roles">
+  <select class="form-select" id="roles" name="roles">
     <% for(let role of roles){ %>
     <option value="<%= role.id %>" <%= account && account.roleId && account.roleId == role.id ? 'checked' : '' %>>
       <%= role.name %>

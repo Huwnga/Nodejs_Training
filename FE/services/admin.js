@@ -13,6 +13,7 @@ exports.getAccount = (req, res, next) => {
 }
 
 exports.getAddAccount = (req, res, next) => {
+  const body = req.body;
   const message = req.flash("messageAdminAccount");
 
   const data = {
@@ -49,6 +50,7 @@ exports.getAddAccount = (req, res, next) => {
 }
 
 exports.getUpdateAccount = (req, res, next) => {
+  const body = req.body;
   const params = req.query;
   const message = req.flash("messageAdminAccount");
 
@@ -178,10 +180,11 @@ exports.postDeleteAccountWithClassroom = (req, res, next) => {
 }
 
 // get data a apiUrl and return htmlpage with data and message(only ejs framework)
-function renderEjsPageWithApiGet (messageName, pagePath, urlApi, req, res, next) {
+function renderEjsPageWithApiGet(messageName, pagePath, urlApi, req, res, next) {
   const params = req.query;
   const message = req.flash(messageName);
   const token = req.cookies.token;
+  const body = req.body;
 
   Admin.get(urlApi, token, params)
     .then(response => {
@@ -194,6 +197,7 @@ function renderEjsPageWithApiGet (messageName, pagePath, urlApi, req, res, next)
       if (error.status == 200) {
         return res.render(pagePath, {
           data: data,
+          body: body,
           message: message
         });
       } else {
@@ -204,7 +208,7 @@ function renderEjsPageWithApiGet (messageName, pagePath, urlApi, req, res, next)
 }
 
 // post data a apiUrl and return htmlpage with data and message(only ejs framework)
-function renderEjsPageWithApiPost (messageName, urlApi, req, res, next) {
+function renderEjsPageWithApiPost(messageName, urlApi, req, res, next) {
   const token = req.cookies.token;
   const params = req.query;
   const body = req.body;
@@ -214,16 +218,18 @@ function renderEjsPageWithApiPost (messageName, urlApi, req, res, next) {
       return response.json();
     })
     .then(results => {
-      console.log(results);
       const error = results.error;
       const data = results.data;
 
-      if(data.body){
-        res.body = data.body;
-      }
-      req.flash(messageName, error.message);
+      if (error.status != 200) {
+        req.flash(messageName, error.message);
 
-      return res.redirect(data.path);
+        return res.redirect(data.path);
+      } else {
+        req.flash(messageName, error.message);
+
+        return res.redirect(data.path);
+      }
     })
     .catch(err => console.log(err));
 }

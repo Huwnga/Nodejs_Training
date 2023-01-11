@@ -25,6 +25,7 @@ app.set('views', 'views');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(flash());
 app.use(

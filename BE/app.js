@@ -35,9 +35,10 @@ const studentRoutes = require('./routes/student');
 
 
 //  Set library
-// app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-// app.use(cookieParser());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Use routes
 app.use('/auth', signin_up_outRoutes);
