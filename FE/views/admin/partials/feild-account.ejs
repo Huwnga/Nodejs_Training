@@ -1,5 +1,7 @@
+<% avatar = account && account.info_account && account.info_account.avatar ? account.info_account.avatar : '' %>
+
 <input type="hidden" name="id" value="<%= account && account.id ? account.id : '' %>">
-<input type="hidden" name="avatarURL" id="avatarURL" value="<%= account && account.info_account && account.info_account.avatar ? account.info_account.avatar : '' %>">
+<input type="hidden" name="avatarURL" id="avatarURL" value="<%= avatar %>">
 
 <div class="form-group">
   <label for="username" class="fw-bold">Username</label>
@@ -24,6 +26,11 @@
   <span class="text-success d-none" id="avartar_success">
     Please choose a image!
   </span>
+  <br>
+
+  <div class="container">
+    <img src="<%= avatar %>" class="img-thumbnail" alt="" style="width: 100%; height: auto;">
+  </div>
 </div>
 <br>
 
