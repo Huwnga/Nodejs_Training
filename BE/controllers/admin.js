@@ -1,4 +1,4 @@
-const port = "http://localhost:3000/";
+const port = "http://localhost:3000";
 const Account = require('../models/account');
 const Info_Account = require('../models/info_account');
 const Account_Class = require('../models/account_class');
@@ -1451,7 +1451,7 @@ exports.postUploadAvatar = (req, res, next) => {
             message: 'Your files uploaded.'
           },
           data: {
-            avatarURL: 'http://localhost:3000/avatar/' + req.files[0].filename
+            avatarURL: port + '/avatar/' + req.files[0].filename
           }
         });
       }

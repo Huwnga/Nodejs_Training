@@ -19,7 +19,7 @@ const full_name_pattern = /^[a-zA-Z]+ [a-zA-Z]+$/;
 var allowedExtensions = /(\.png)$/i;
 // var allowedExtensions = /(\.png|\.docx|\.odt|\.pdf|\.tex|\.txt|\.rtf|\.wps|\.wks|\.wpd)$/i;
 
-function validated() {
+async function validated() {
   flag = false;
 
   // Allowing file type
@@ -33,12 +33,18 @@ function validated() {
 
       flag = true;
     } else {
-      if (uploadSingleFile) {
+      const result = await uploadSingleFile();
+      const error = result.error;
+      const data = result.data;
+
+      if (error.status == 200) {
         avartar_error.classList.add('d-none');
         avartar_success.classList.remove('d-none');
         avartar_success.innerHTML = `Upload file successfully!`;
+
+        avatarURL.value = data.avatarURL;
       } else {
-        avartar_error.innerHTML = `Upload file fail!`;
+        avartar_error.innerHTML = `${error.message}`;
         avartar_error.classList.remove('d-none');
         avartar_success.classList.add('d-none');
 
@@ -110,24 +116,11 @@ function uploadSingleFile() {
   let token = findValueCookieByKey('token');
 
   const fileField = document.querySelector('input[type="file"]');
-  const file = fileField.file[0];
 
   if (fileField.id === 'avatar') {
-    putSingleFile(url, token, fileField.id, fileField)
+    return putSingleFile(url, token, fileField.id, fileField)
       .then(response => {
         return response.json();
-      })
-      .then(result => {
-        const error = result.error;
-        const data = result.data;
-
-        if (error.status == 200) {
-          avatarURL.value = data.avatarURL;
-          
-          return true;
-        } else {
-          return false;
-        }
       })
       .catch(error => console.log('error', error));
   }
