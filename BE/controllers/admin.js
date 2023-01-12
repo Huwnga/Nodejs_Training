@@ -387,7 +387,7 @@ exports.postUpdateAccount = (req, res, next) => {
 
   const id = body.id;
   const username = body.username;
-  const avatar = body.avatar;
+  const avatarURL = body.avatarURL;
   const password = body.password;
   const full_name = body.full_name;
   const gender = body.gender;
@@ -431,7 +431,7 @@ exports.postUpdateAccount = (req, res, next) => {
                   .then(info => {
                     if (info) {
                       info.update({
-                        avatar: avatar,
+                        avatar: avatarURL,
                         full_name: full_name,
                         gender: gender,
                       });
@@ -439,7 +439,7 @@ exports.postUpdateAccount = (req, res, next) => {
                     } else {
                       Info_Account.create({
                         full_name: full_name,
-                        avatar: avatar,
+                        avatar: avatarURL,
                         gender: gender,
                         accountId: id
                       })
@@ -526,7 +526,7 @@ exports.postUpdateAccount = (req, res, next) => {
             .then(info => {
               if (info) {
                 info.update({
-                  avatar: avatar,
+                  avatar: avatarURL,
                   full_name: full_name,
                   gender: gender,
                 });
@@ -545,7 +545,7 @@ exports.postUpdateAccount = (req, res, next) => {
               } else {
                 Info_Account.create({
                   full_name: full_name,
-                  avatar: avatar,
+                  avatar: avatarURL,
                   gender: gender,
                   accountId: id
                 })
