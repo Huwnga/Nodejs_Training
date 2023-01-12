@@ -30,51 +30,6 @@ routes.post('/classroom/delete_student', isAdmin, adminController.postDeleteStud
 routes.get('/role', adminController.getRoles);
 
 //upload avatar
-routes.post('/upload_avatar', isAdmin, (req, res) => {
-  uploadAvatar(req, res, function (err) {
-    if (err instanceof multer.MulterError) {
-      // A Multer error occurred when uploading.
-      return res.status(200).json({
-        error: {
-          error: 500,
-          message: `Multer uploading error: ${err.message}`
-        },
-        data: {}
-      });
-    } else if (err) {
-      // An unknown error occurred when uploading.
-      if (err.name == 'ExtensionError') {
-        return res.status(200).json({
-          error: {
-            error: 413,
-            message: err.message
-          },
-          data: {}
-        });
-      } else {
-        return res.status(200).json({
-          error: {
-            error: 500,
-            message: `Unknown uploading error: ${err.message}`
-          },
-          data: {}
-        });
-      }
-    }
-
-    // Everything went fine.
-    // show file `req.files`
-    // show body `req.body`
-    return res.status(200).json({
-      error: {
-        error: 200,
-        message: 'Your files uploaded.'
-      },
-      data: {
-        avatar: 'http://localhost:3000/avatar/' + req.file.path
-      }
-    });
-  })
-});
+routes.post('/upload_avatar', isAdmin, adminController.postUploadAvatar);
 
 module.exports = routes;

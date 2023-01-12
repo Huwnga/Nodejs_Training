@@ -17,12 +17,6 @@ const errorController = require('./controllers/error');
 
 const app = express();
 
-// app.use((req, res, next) => {
-//   res.setHeader('Access-Controll-Allow-Origin', '*');
-//   res.setHeader('Access-Controll-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
-//   res.setHeader('Access-Controll-Allow-Headers', 'Content-Type, Authorization');
-// });
-
 // Call routes
 const signin_up_outRoutes = require('./routes/signin_up_out');
 const adminRoutes = require('./routes/admin');
@@ -39,6 +33,12 @@ const studentRoutes = require('./routes/student');
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use((req, res, next) => { 
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  // res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, token');
+  next();
+});
 
 // Use routes
 app.use('/auth', signin_up_outRoutes);

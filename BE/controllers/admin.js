@@ -1395,15 +1395,66 @@ exports.getRoles = (req, res, next) => {
 }
 
 exports.postUploadAvatar = (req, res, next) => {
+  uploadAvatar(req, res, function (err) {
+    if (err instanceof multer.MulterError) {
+      // A Multer error occurred when uploading.
+      return res.status(200).json({
+        error: {
+          status: 500,
+          message: `Multer uploading error: ${err.message}`
+        },
+        data: {}
+      });
+    } else if (err) {
+      // An unknown error occurred when uploading.
+      if (err.name == 'ExtensionError') {
+        return res.status(200).json({
+          error: {
+            status: 413,
+            message: err.message
+          },
+          data: {}
+        });
+      } else {
+        return res.status(200).json({
+          error: {
+            status: 500,
+            message: `Unknown uploading error: ${err.message}`
+          },
+          data: {}
+        });
+      }
+    } else {
+      const file = req.files;
 
-  // Everything went fine.
-  // show file `req.files`
-  // show body `req.body`
-  return res.status(200).json({
-    error: {
-      error: 200,
-      message: 'Your files uploaded.'
-    },
-    data: {}
+      if (file.length < 1) {
+        return res.status(200).json({
+          error: {
+            status: 401,
+            message: 'Must upload file!'
+          },
+          data: {}
+        });
+      } else if (file.length > 1) {
+        return res.status(200).json({
+          error: {
+            status: 401,
+            message: 'Cannot upload multipe file!'
+          },
+          data: {}
+        });
+      } else {
+        // Everything went fine.
+        return res.status(200).json({
+          error: {
+            status: 200,
+            message: 'Your files uploaded.'
+          },
+          data: {
+            avatarURL: 'http://localhost:3000/avatar/' + req.files[0].filename
+          }
+        });
+      }
+    }
   });
 }

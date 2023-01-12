@@ -1,31 +1,31 @@
 // const express = require('express');
 // const FormData = require('form-data');
-const apiPort = "http://localhost:3000/admin";
+const apiPortAdmin = "http://localhost:3000/admin";
 const pathAccount = "/account";
 const pathClassroom = "/classroom";
 const pathRole = "/role";
 
 exports.apiUrlAccount = {
-  account: apiPort + pathAccount,
-  todolist: apiPort + pathAccount + "/todolist",
-  add: apiPort + pathAccount + "/add",
-  update: apiPort + pathAccount + "/update",
-  active: apiPort + pathAccount + "/active",
-  inactive: apiPort + pathAccount + "/inactive",
-  updateInfo: apiPort + pathAccount + "/info/update"
+  account: apiPortAdmin + pathAccount,
+  todolist: apiPortAdmin + pathAccount + "/todolist",
+  add: apiPortAdmin + pathAccount + "/add",
+  update: apiPortAdmin + pathAccount + "/update",
+  active: apiPortAdmin + pathAccount + "/active",
+  inactive: apiPortAdmin + pathAccount + "/inactive",
+  updateInfo: apiPortAdmin + pathAccount + "/info/update"
 };
 
 exports.apiUrlClassroom = {
-  classroom: apiPort + pathClassroom,
-  add: apiPort + pathClassroom + "/add",
-  update: apiPort + pathClassroom + "/update",
-  delete: apiPort + pathClassroom + "/delete",
-  addStudent: apiPort + pathClassroom + "/add_student",
-  removeStudent: apiPort + pathClassroom + "/delete_student"
+  classroom: apiPortAdmin + pathClassroom,
+  add: apiPortAdmin + pathClassroom + "/add",
+  update: apiPortAdmin + pathClassroom + "/update",
+  delete: apiPortAdmin + pathClassroom + "/delete",
+  addStudent: apiPortAdmin + pathClassroom + "/add_student",
+  removeStudent: apiPortAdmin + pathClassroom + "/delete_student"
 };
 
 exports.apiUrlRole = {
-  role: apiPort + pathRole
+  role: apiPortAdmin + pathRole
 }
 
 // get
@@ -47,7 +47,7 @@ exports.get = function (url, token, params) {
   var headers = new Headers();
   headers.append("Content-Type", "application/json");
   headers.append("token", token);
-  
+
   const response = fetch(url + "?" + new URLSearchParams(params), {
     method: 'GET',
     headers: headers,
@@ -79,6 +79,23 @@ exports.postOne = function (url, token, body, params) {
   headers.append("token", token);
 
   const response = fetch(url + "?" + new URLSearchParams(params), {
+    method: 'POST',
+    headers: headers,
+    body: JSON.stringify(body),
+    redirect: 'follow'
+  });
+
+  return response;
+};
+
+exports.postSingleFile = function (url, token, feildName, fileField) {
+  var headers = new Headers();
+  headers.append("token", token);
+
+  const formData = new FormData();
+  formData.append(feildName, fileField.files[0]);
+
+  const response = fetch(url, {
     method: 'POST',
     headers: headers,
     body: JSON.stringify(body),

@@ -2,11 +2,10 @@ const multer = require('multer');
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    console.log(file);
     cb(null, 'public/avatar');
   },
   filename: (req, file, cb) => {
-    cb(null, file.fieldname + '-' + Date.now() + file.originalname);
+    cb(null, file.fieldname + '-' + Date.now() + '-' + file.originalname);
   }
 });
 

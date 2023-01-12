@@ -1,8 +1,8 @@
-const apiPort = "http://localhost:3000/auth";
+const apiPortAuth = "http://localhost:3000/auth";
 
 exports.apiSign = {
-  signIn: apiPort + "/signin",
-  signUp: apiPort + "/signup"
+  signIn: apiPortAuth + "/signin",
+  signUp: apiPortAuth + "/signup"
 }
 
 exports.postSign = function (url, body) {
