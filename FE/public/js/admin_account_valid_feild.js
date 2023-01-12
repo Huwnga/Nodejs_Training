@@ -1,5 +1,6 @@
 const username = document.getElementById("username");
 const username_error = document.getElementById("username_error");
+const avatarURL = document.getElementById("avatarURL");
 const avatar = document.getElementById("avatar");
 const avartar_error = document.getElementById("avartar_error");
 const avartar_success = document.getElementById("avartar_success");
@@ -32,12 +33,10 @@ function validated() {
 
       flag = true;
     } else {
-      console.log(uploadSingleFile);
       if (uploadSingleFile) {
         avartar_error.classList.add('d-none');
         avartar_success.classList.remove('d-none');
         avartar_success.innerHTML = `Upload file successfully!`;
-
       } else {
         avartar_error.innerHTML = `Upload file fail!`;
         avartar_error.classList.remove('d-none');
@@ -111,6 +110,7 @@ function uploadSingleFile() {
   let token = findValueCookieByKey('token');
 
   const fileField = document.querySelector('input[type="file"]');
+  const file = fileField.file[0];
 
   if (fileField.id === 'avatar') {
     putSingleFile(url, token, fileField.id, fileField)
@@ -122,7 +122,7 @@ function uploadSingleFile() {
         const data = result.data;
 
         if (error.status == 200) {
-          localStorage.setItem('avatarURL', data.avatarURL);
+          avatarURL.value = data.avatarURL;
           
           return true;
         } else {

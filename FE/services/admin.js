@@ -2,8 +2,6 @@ const Admin = require('../model/admin');
 const apiUrlAccount = Admin.apiUrlAccount;
 const apiUrlClassroom = Admin.apiUrlClassroom;
 const apiUrlRole = Admin.apiUrlRole;
-const LocalStorage = require('node-localstorage').LocalStorage;
-const localStorage = new LocalStorage('./scratch');
 
 // account
 exports.getAccounts = (req, res, next) => {
@@ -85,16 +83,10 @@ exports.getUpdateAccount = (req, res, next) => {
 }
 
 exports.postAddAccount = (req, res, next) => {
-  const avatarURL = localStorage.getItem('avatar');
-  req.body.avatar = avatarURL;
-
   return renderEjsPageWithApiPost('messageAdminAccount', apiUrlAccount.add, req, res, next);
 }
 
 exports.postUpdateAccount = (req, res, next) => {
-  const avatarURL = localStorage.getItem('avatar');
-  req.body.avatar = avatarURL;
-
   return renderEjsPageWithApiPost('messageAdminAccount', apiUrlAccount.update, req, res, next);
 }
 

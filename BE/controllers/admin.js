@@ -215,13 +215,13 @@ exports.postAddAccount = (req, res, next) => {
   }
 
   const username = body.username;
-  const avatar = body.avatar;
+  const avatarURL = body.avatarURL;
   const password = body.password;
   const full_name = body.full_name;
   const gender = body.gender;
   const roleId = body.roles;
 
-  if (!(username && avatar && password && full_name && gender && roleId)) {
+  if (!(username && avatarURL && password && full_name && gender && roleId)) {
     return res.status(200).json({
       error: {
         status: 401,
@@ -263,7 +263,7 @@ exports.postAddAccount = (req, res, next) => {
                   if (account1) {
                     Info_Account.create({
                       full_name: full_name,
-                      avatar: avatar,
+                      avatar: avatarURL,
                       gender: gender,
                       accountId: account.id
                     })
@@ -664,7 +664,7 @@ exports.getUpdateInfoAccount = (req, res, next) => {
 exports.postUpdateInfoAccount = (req, res, next) => {
   const id = req.body.id;
   const fullname = req.body.full_name;
-  const avatar = req.body.avatar;
+  const avatarURL = req.body.avatarURL;
   const gender = req.body.gender;
   const dob = req.body.dob;
   const mobile = req.body.mobile;
@@ -683,14 +683,14 @@ exports.postUpdateInfoAccount = (req, res, next) => {
       if (account) {
         Info_Account.findOne({
           where: {
-            accountId: id
+            accountId: account.id
           }
         })
           .then(info => {
             if (info != null) {
               info.update({
                 full_name: fullname,
-                avatar: account.role.name + account.id + ".png",
+                avatar: avatarURL,
                 gender: gender,
                 dob: dob,
                 mobile: mobile,
@@ -700,12 +700,12 @@ exports.postUpdateInfoAccount = (req, res, next) => {
             } else {
               Info_Account.create({
                 full_name: full_name,
-                avatar: account.role.name + account.id + ".png",
+                avatar: avatarURL,
                 gender: gender,
                 dob: dob,
                 mobile: mobile,
                 address: address,
-                accountId: accountId
+                accountId: account.id
               });
             }
           })
